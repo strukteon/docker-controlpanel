@@ -1,0 +1,33 @@
+$font: 'Poppins';
+$file_type: 'ttf';
+$folder: './fonts/poppins/';
+$weights: ('Black': 900, 'Bold': 700, 'ExtraBold': 800, 'ExtraLight': 200, 'Light': 300, 'Medium': 400, 'SemiBold': 500, 'Thin': 100);
+
+@each $name, $weight in $weights {
+  @font-face {
+    font-family: $font;
+    src: url($folder + $font + '-' + $name + '.' + $file_type);
+    font-weight: $weight;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: $font;
+    src: url($folder + $font + '-' + $name + 'Italic.' + $file_type);
+    font-weight: $weight;
+    font-style: italic;
+  }
+}
+
+@font-face {
+  font-family: $font;
+  src: url($folder + $font + '-Italic.' + $file_type);
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: $font;
+  src: url($folder + $font + '-Regular.' + $file_type);
+  font-weight: normal;
+  font-style: normal;
+}

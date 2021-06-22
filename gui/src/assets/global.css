@@ -1,0 +1,10 @@
+button {
+    font-family: Poppins, sans-serif;
+    border: 1px transparent solid;
+    line-height: .75rem;
+    font-size: .9rem;
+    padding: 6px;
+    border-radius: 5px;
+    margin: 0 .25rem;
+    cursor: pointer;
+}
