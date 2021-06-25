@@ -1,4 +1,5 @@
 <template>
+  <modal title="Delete Volume" text="The deleted Volume will not be recoverable." button_color="red" ref="modal" @okay="delete_volume()"/>
   <div class="infopanel" v-if="selection.length === 1">
     <font-awesome-icon class="volume-icon" :icon="faHdd"/>
     <p class="volume-name">{{ selection[0].Name }}</p>
@@ -8,7 +9,7 @@
     </div>
     <div class="buttons">
       <button class="btn-inspect">Inspect</button>
-      <button class="btn-delete"><font-awesome-icon :icon="faTrashAlt"/></button>
+      <button class="btn-delete" @click="$refs.modal.show()"><font-awesome-icon :icon="faTrashAlt"/></button>
     </div>
     <div class="details">
       <infopanel-entry title="Created at" :content="created_at"/>
@@ -48,6 +49,7 @@ import InfopanelEntry from "@/views/volumes/InfopanelEntry";
 import UsageIndicator from "@/views/volumes/UsageIndicator";
 import {faCopy, faHdd, faTrashAlt} from "@fortawesome/free-regular-svg-icons";
 import {faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import Modal from "@/components/Modal";
 export default {
   name: "Infopanel",
   props: {
@@ -64,7 +66,7 @@ export default {
       infopanel: {}
     }
   },
-  components: { InfopanelEntry, UsageIndicator },
+  components: {Modal, InfopanelEntry, UsageIndicator },
   methods: {
     readableSize,
     close_dropdown(val) {
@@ -78,13 +80,16 @@ export default {
       for (let sel of this.selection)
         total += sel.UsageData.Size;
       return total;
+    },
+    delete_volume() {
+      this.axios.delete("")
     }
   },
   computed: {
     created_at() {
       let date = new Date(this.selection[0].CreatedAt);
       return date.toLocaleString();
-    }
+    },
   }
 }
 </script>

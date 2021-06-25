@@ -9,13 +9,13 @@
 
       <div class="sort-filter">
         <button>Sort by</button>
-        <sort-select class="selected-option" ref="sortSelect" :options="['Name', 'Size', 'Created At']"/>
+        <sort-select class="selected-option" ref="sortSelect" :options="['Name', 'Size', 'Created At']" @input="sort_method = $event.toLowerCase().replace(' ', '_')"/>
         <button @click="sort_desc = !sort_desc"><font-awesome-icon :icon="sort_desc ? faSortAlphaDown : faSortAlphaUp"/></button>
       </div>
 
 
     </div>
-    <volume :ref="setVolumeRef" v-for="vol in volumes" :volume-data="vol" :key="vol.Name" @select="update_infopanel"/>
+    <volume :ref="setVolumeRef" v-for="vol in visible_volumes" :volume-data="vol" :key="vol.Name" @select="update_infopanel"/>
 
     <teleport to="#infopanel" class="infopanel">
       <infopanel :selection="selection"/>
@@ -45,10 +45,22 @@ export default {
       ip_containers_shown: false,
 
       selection: [],
+      last_selected: -1,
       volumeRefs: [],
 
       usageFilter: 'all',
+      usageFilters:{
+        'all': () => true,
+        'in_use': vol => vol.UsageData?.RefCount > 0,
+        'unused': vol => vol.UsageData?.RefCount === 0,
+      },
       sort_desc: true,
+      sort_method: 'name',
+      sort_methods: {
+        'name': (a, b) => a.Name.localeCompare(b.Name),
+        'size': (a, b) => a.UsageData.Size - b.UsageData.Size,
+        'created_at': (a, b) => Date.parse(a.CreatedAt) - Date.parse(b.CreatedAt),
+      }
     }
   },
   beforeMount() {
@@ -71,24 +83,33 @@ export default {
       return sel_volumes;
     },
     update_infopanel(event) {
-      console.log(event)
-      console.log('first index', this.volumeRefs.findIndex(val => val.selected))
-      console.log('last index', this.volumeRefs.reverse().findIndex(val => val.selected) - this.volumeRefs.length)
+      let selIndex = this.volumeRefs.findIndex(val => val === event.$el);
       if (event.ctrlKey)
         event.$el.selected = ! event.$el.selected;
       else if (event.shiftKey) {
-        let selection_started = false;
-        for (let vol of this.volumeRefs) {
-          if (selection_started) vol.selected = true;
-          else if (vol.selected) selection_started = true;
-          if (vol === event.$el) selection_started = false;
+        if (this.last_selected === -1) return;
+        console.log(this.last_selected, selIndex)
+        for (let i = Math.min(this.last_selected, selIndex);
+             i <= Math.max(this.last_selected, selIndex); i++) {
+          this.volumeRefs[i].selected = true;
         }
       } else {
         this.volumeRefs.forEach(vol => vol.selected = false);
         event.$el.selected = true;
       }
       this.selection = this.get_selected_volumes();
+      if (event.$el.selected) this.last_selected = selIndex;
+      console.log('end', this.last_selected, selIndex)
     },
+  },
+  computed: {
+    visible_volumes() {
+      let out = this.volumes
+          .filter(this.usageFilters[this.usageFilter])
+          .sort(this.sort_methods[this.sort_method]);
+      if (!this.sort_desc) return out.reverse();
+      return out;
+    }
   },
   beforeUpdate() {
     this.volumeRefs = []

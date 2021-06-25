@@ -1,10 +1,13 @@
 <template>
   <div>test</div>
+  <modal/>
 </template>
 
 <script>
+import Modal from "@/components/Modal";
 export default {
-  name: "Home"
+  name: "Home",
+  components: {Modal}
 }
 </script>
 

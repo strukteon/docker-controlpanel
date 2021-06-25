@@ -20,12 +20,14 @@ export default {
   margin: 0;
 }
 
+body {
+  font-family: Poppins, sans-serif;
+}
+
 .mainview {
   display: flex;
   flex-direction: row;
   height: 100vh;
-
-  font-family: Poppins, sans-serif;
 }
 
 .sidebar {
