@@ -1,47 +1,26 @@
 <template>
-  <navbar/>
-  <div class="mainview">
-    <sidebar/>
-    <router-view class="router-view"/>
-    <aside id="infopanel"/>
-  </div>
+  <img alt="Vue logo" src="./assets/logo.png">
+  <HelloWorld msg="Welcome to Your Vue.js App"/>
 </template>
 
 <script>
-import Sidebar from "@/components/Sidebar";
+import HelloWorld from './components/HelloWorld.vue'
+
 export default {
-  components: {Sidebar}
+  name: 'App',
+  components: {
+    HelloWorld
+  }
 }
 </script>
 
 <style>
-* {
-  padding: 0;
-  margin: 0;
-}
-
-body {
-  font-family: Poppins, sans-serif;
-}
-
-.mainview {
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
-}
-
-.sidebar {
-  width: 15rem;
-}
-
-.router-view {
-  height: 100vh;
-  overflow-y: scroll;
-}
-
-#infopanel {
-  width: 50rem;
-  height: 100vh;
-  overflow-y: scroll;
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
 }
 </style>
