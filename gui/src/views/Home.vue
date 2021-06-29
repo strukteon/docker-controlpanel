@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
+    What is <VueCustomTooltip label="This is a tooltip">a tooltip</VueCustomTooltip>?
+    <p>This is a <vue-custom-tooltip label="Neat!">tooltip</vue-custom-tooltip>.</p>
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
@@ -12,7 +13,7 @@ import HelloWorld from '@/components/HelloWorld.vue'
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    HelloWorld,
   }
 }
 </script>
