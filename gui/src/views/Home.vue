@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    What is <VueCustomTooltip label="This is a tooltip">a tooltip</VueCustomTooltip>?
+    What is <VueCustomTooltip label="This is a tooltip" position="is-bottom" sticky>a tooltip</VueCustomTooltip>?
     <p>This is a <vue-custom-tooltip label="Neat!">tooltip</vue-custom-tooltip>.</p>
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>

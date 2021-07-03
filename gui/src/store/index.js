@@ -1,12 +1,15 @@
 import { createStore } from 'vuex'
+import { volumesModule } from "@/store/VolumesModule";
+import ServerStatusMonitorPlugin from "@/store/ServerStatusMonitorPlugin";
 
 export default createStore({
-  state: {
-  },
-  mutations: {
+  modules: {
+    volumes: volumesModule
   },
   actions: {
+    setup({ dispatch }, { axios }) {
+      dispatch('volumes/loadVolumes', { axios });
+    }
   },
-  modules: {
-  }
+  plugins: [ServerStatusMonitorPlugin(new WebSocket('ws://localhost'))]
 })

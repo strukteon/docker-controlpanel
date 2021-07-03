@@ -1,30 +1,61 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div class="app">
+    <app-header/>
+    <div class="app-body">
+      <div class="sidebar">
+        <router-link :to="{ name: 'Dashboard' }">Dashboard</router-link>
+        <router-link to="/">Containers</router-link>
+        <router-link :to="{ name: 'Volumes' }">Volumes</router-link>
+        <router-link to="/">Images</router-link>
+      </div>
+      <router-view class="view-content"/>
+    </div>
   </div>
-  <router-view/>
 </template>
 
+<script>
+import AppHeader from "@/components/AppHeader";
+export default {
+  components: {AppHeader}
+}
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  .app-body {
+    flex-grow: 1;
+    display: flex;
+    overflow: hidden;
+  }
+  .sidebar {
+    width: 15rem;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #e9ebee;
+  }
 
-#nav {
-  padding: 30px;
-}
+  .sidebar > * {
+    text-decoration: none;
+    color: rgba(0, 0, 0, .5);
+    transition: font-weight, color .2s ease;
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+    padding: .25rem 1rem;
+  }
+  .sidebar > *:hover {
+    color: rgba(0, 0, 0, .7);
+  }
+  .router-link-active {
+    color: rgba(0, 0, 0, .7);
+    font-weight: 500;
+  }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+  .view-content {
+    overflow-y: scroll;
+    flex-grow: 1;
+  }
 </style>

@@ -11,5 +11,10 @@ status.router.get("", ((req, res) => {
         status: "running"
     })
 }))
+status.router.get("/monitor", ((req, res) => {
+    status.docker?.getEvents({}, (err, data) => {
+
+    })
+}))
 
 export default status;
