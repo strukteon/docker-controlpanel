@@ -8,7 +8,7 @@ const status: Endpoint = {
 }
 
 status.router.get("/all", async (req, res) => {
-    res.json(await status.docker?.listVolumes({all: true}));
+    res.json(await status.docker?.listContainers({all: true}));
 })
 
 export default status;

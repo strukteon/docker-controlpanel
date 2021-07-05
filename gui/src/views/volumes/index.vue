@@ -10,19 +10,17 @@
 
         <div class="sort">
           <span class="sort-by-text">Sort by</span>
-          <sort-select :options="[ 'Name', 'Size', 'Creation Date' ]"/>
+          <sort-select :options="[ 'Name', 'Size', 'Creation Date' ]" @input="sortingMethod = $event.toLowerCase().replace(' ', '_')"/>
 
-          <div class="direction-button-wrapper">
-            <vue-custom-tooltip
-                class="aksdkasjdkajsdk"
-                :style="{display: 'block'}"
-                :label="sortDescending ? 'Descending' : 'Ascending'"
-                position="is-bottom">
-              <button @click="sortDescending = !sortDescending">
-                <font-awesome-icon :icon="sortDescending ? 'sort-alpha-down' : 'sort-alpha-up'"/>
-              </button>
-            </vue-custom-tooltip>
-          </div>
+          <vue-custom-tooltip
+              id="direction-button-wrapper"
+              :style="{display: 'block'}"
+              :label="sortDescending ? 'Descending' : 'Ascending'"
+              position="is-bottom">
+            <button @click="sortDescending = !sortDescending">
+              <font-awesome-icon :icon="sortDescending ? 'sort-alpha-down' : 'sort-alpha-up'"/>
+            </button>
+          </vue-custom-tooltip>
         </div>
       </div>
 
@@ -48,6 +46,12 @@ export default {
   data() {
     return {
       sortDescending: true,
+      sortingMethod: 'name',
+      sortMethods: {
+        'name': (o1, o2) => o1.Name.localeCompare(o2.Name),
+        'size': (o1, o2) => o2.UsageData.Size - o1.UsageData.Size,
+        'creation_date': (o1, o2) => (Date.parse(o1.CreatedAt) - Date.parse(o2.CreatedAt))
+      },
 
       selection: [],
     }
@@ -57,7 +61,7 @@ export default {
       volumesArray: 'volumes/volumesArray'
     }),
     volumes() {
-      const sorted = this.volumesArray(()=>0);
+      const sorted = this.volumesArray(this.sortMethods[this.sortingMethod]);
       if (!this.sortDescending) return sorted.reverse();
       return sorted;
     }
@@ -69,17 +73,28 @@ export default {
   .sorting {
     padding: 1rem;
   }
+  .description {
+    margin: .2rem 1rem;
+    font-size: .8rem;
+    color: rgba(0, 0, 0, .7);
+  }
+
   .options-row {
     display: flex;
+    align-items: center;
   }
 
   .filters {
     display: block;
+    margin: 0 1rem;
+    height: 100%;
   }
   .filters > button {
-    border: 1px transparent solid;
+    border: 1px #e6e6e6 solid;
     text-transform: uppercase;
     cursor: pointer;
+    background-color: rgba(0, 0, 0, .1);
+    height: 100%;
   }
   .filters > button:hover {
     border-color: red;
@@ -94,16 +109,39 @@ export default {
   }
 
   .sort {
-    background-color: #42b983;
-    border: 1px solid transparent;
-    border-radius: 8px;
     display: flex;
+    align-items: center;
+    background-color: #e6e6e6;
+    border-radius: 8px;
   }
   .sort .sort-by-text {
     user-select: none;
     display: block;
+    background-color: #e6e6e6;
+    border: 0px solid transparent;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    font-size: .9rem;
+    margin: .2rem;
+    margin-left: .4rem;
   }
-  .sort .vue-custom-tooltip {
+  .sort button {
     display: block;
+    border: 1px transparent solid;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    cursor: pointer;
+    background-color: #e6e6e6;
+    height: 100%;
+    padding: 0 .4rem;
+    line-height: .875rem;
   }
+</style>
+
+<style>
+
+.sort #direction-button-wrapper {
+  display: flex;
+  height: 100%;
+}
 </style>

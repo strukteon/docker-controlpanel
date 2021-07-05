@@ -6,7 +6,8 @@
         <router-link :to="{ name: 'Dashboard' }">Dashboard</router-link>
         <router-link to="/">Containers</router-link>
         <router-link :to="{ name: 'Volumes' }">Volumes</router-link>
-        <router-link to="/">Images</router-link>
+        <router-link :to="{ name: 'Networks' }">Networks</router-link>
+        <router-link :to="{ name: 'Images' }">Images</router-link>
       </div>
       <router-view class="view-content"/>
     </div>

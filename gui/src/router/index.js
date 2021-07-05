@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../views/dashboard'
 import Volumes from '../views/volumes'
+import Images from '../views/images'
+import Networks from '../views/networks'
 
 const routes = [
   {
@@ -13,6 +15,16 @@ const routes = [
     path: '/volumes',
     name: 'Volumes',
     component: Volumes
+  },
+  {
+    path: '/images',
+    name: 'Images',
+    component: Images
+  },
+  {
+    path: '/networks',
+    name: 'Networks',
+    component: Networks
   },
   {
     path: '/about',

@@ -14,14 +14,14 @@
       <div class="volume-title">{{ volumeData.Name }}</div>
       <div class="bottom-row">
         <div class="volume-size">{{ readableSize(volumeData.UsageData.Size) }}</div>
-        <div class="volume-creation-date">2 months ago</div>
+        <div class="volume-creation-date">{{ readableDateDiff(volumeData.CreatedAt) }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {readableSize} from "@/util/Tools";
+import { readableSize, readableDateDiff } from "@/util/Tools";
 
 export default {
   name: "VolumeListItem",
@@ -29,8 +29,9 @@ export default {
     volumeData: Object,
   },
   methods: {
-    readableSize
-  }
+    readableSize,
+    readableDateDiff
+  },
 }
 </script>
 

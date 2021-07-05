@@ -70,6 +70,7 @@ export default {
 .v-select .selected {
   position: relative;
   color: #000;
+  background-color: #e6e6e6;
   cursor: pointer;
   user-select: none;
   width: 7rem;
@@ -106,7 +107,7 @@ export default {
 }
 
 .v-select .items div:hover {
-  background-color: #ad8225;
+  background-color: rgba(0, 0, 0, .2);
 }
 
 .selectHide {

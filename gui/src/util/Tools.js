@@ -12,20 +12,22 @@ export function readableSize(bytes) {
 
 export function readableDateDiff(date) {
     if (typeof date == "string") date = Date.parse(date);
-    let diff = new Date(Date.now() - date);
-    let years = diff.getFullYear() - 1970,
-        months = diff.getMonth(),
-        days = diff.getDate(),
-        minutes = diff.getMinutes(),
-        seconds = diff.getSeconds();
+    let diff = (Date.now() - date) / 1000;
+    let years = Math.abs(Math.round(diff / (365 * 24 * 60 * 60))),
+        months = Math.abs(Math.round(diff / (4 * 7 * 24 * 60 * 60))),
+        days = Math.abs(Math.round(diff / (24 * 60 * 60))),
+        hours = Math.abs(Math.round(diff / (60 * 60))),
+        minutes = Math.abs(Math.round(diff / (60))),
+        seconds = Math.abs(Math.round(diff));
 
-    console.log(Date.now() - 1970, new Date(date), diff, days)
     if (years > 0)
         return `${years} year${years > 1 ? 's' : ''} ago`;
     if (months > 0)
         return `${months} month${months > 1 ? 's' : ''} ago`;
     if (days > 0)
         return `${days} day${days > 1 ? 's' : ''} ago`;
+    if (hours > 0)
+        return `${hours} hour${hours > 1 ? 's' : ''} ago`;
     if (minutes > 0)
         return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
     if (seconds > 0)
