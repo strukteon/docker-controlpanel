@@ -5,18 +5,18 @@
       <tr>
         <th>.</th>
         <th>ID</th>
-        <th>Image ID</th>
+        <th>Image</th>
         <th>Created</th>
-        <th>Size</th>
+        <th>Status</th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="netw of networks" :key="netw.Id">
-        <td>{{ netw.Name }}</td>
-        <td>{{ netw.Id }}</td>
-        <td>{{ netw.Driver }}</td>
-        <td>{{ netw.Scope }}</td>
-        <td>{{ readableDateDiff(netw.Created * 1000) }}</td>
+      <tr v-for="cont of containers" :key="cont.Id">
+        <td>{{ cont.Names[0] }}</td>
+        <td>{{ cont.Id }}</td>
+        <td>{{ cont.Image }}</td>
+        <td>{{ readableDateDiff(cont.Created * 1000) }}</td>
+        <td>{{ cont.Status }}</td>
       </tr>
       </tbody>
     </table>
@@ -31,10 +31,10 @@ export default {
   name: "Containers",
   computed: {
     ...mapGetters({
-      networksArray: 'networks/networksArray'
+      containersArray: 'containers/containersArray'
     }),
-    networks() {
-      const sorted = this.networksArray(()=>0);
+    containers() {
+      const sorted = this.containersArray(()=>0);
       return sorted;
     }
   },

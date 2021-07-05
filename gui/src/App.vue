@@ -4,7 +4,7 @@
     <div class="app-body">
       <div class="sidebar">
         <router-link :to="{ name: 'Dashboard' }">Dashboard</router-link>
-        <router-link to="/">Containers</router-link>
+        <router-link :to="{ name: 'Containers' }">Containers</router-link>
         <router-link :to="{ name: 'Volumes' }">Volumes</router-link>
         <router-link :to="{ name: 'Networks' }">Networks</router-link>
         <router-link :to="{ name: 'Images' }">Images</router-link>

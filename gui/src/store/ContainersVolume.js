@@ -1,39 +1,39 @@
 import {getApiUrl} from "@/util/Tools";
 
-export const imagesModule = {
+export const containersModule = {
     namespaced: true,
 
     state: () => ({
-        images: { }
+        containers: { }
     }),
     getters: {
-        images(state) {
-            return state.images;
+        containers(state) {
+            return state.containers;
         },
-        imagesArray: (state) => (comparator) => {
-            const images = Object.values(state.images);
-            if (comparator) return images.sort(comparator);
-            return images;
+        containersArray: (state) => (comparator) => {
+            const containers = Object.values(state.containers);
+            if (comparator) return containers.sort(comparator);
+            return containers;
         }
     },
     mutations: {
-        setImages(state, { images }) {
-            state.images = {
-                ...images
+        setContainers(state, { containers }) {
+            state.containers = {
+                ...containers
             };
         },
-        removeImage(state, { imageId }) {
-            delete state.images[imageId];
+        removeContainer(state, { containerId }) {
+            delete state.containers[containerId];
         }
     },
     actions: {
-        async loadImages({ commit }, { axios }) {
-            const res = await axios.get(`//${getApiUrl()}/images/all`);
-            const images = res.data;
-            const imagesObj = {};
-            for (let img of images)
-                imagesObj[img.Id] = img;
-            commit('setImages', { images: imagesObj });
+        async loadContainers({ commit }, { axios }) {
+            const res = await axios.get(`//${getApiUrl()}/containers/all`);
+            const containers = res.data;
+            const containersObj = {};
+            for (let con of containers)
+                containersObj[con.Id] = con;
+            commit('setContainers', { containers: containersObj });
         },
     }
 }

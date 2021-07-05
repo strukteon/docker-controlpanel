@@ -1,10 +1,10 @@
 <template>
-  <router-view/>
+  <div>inspect volume</div>
 </template>
 
 <script>
 export default {
-  name: "index"
+  name: "InspectVolume"
 }
 </script>
 
