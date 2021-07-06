@@ -7,7 +7,7 @@ export default function (server: http.Server, docker: Dockerode) {
 
     docker.getEvents({}, (err, data) => {
         docker.getEvents({}, function (err, data) {
-            if(err){
+           /* if(err){
                 console.log(err.message);
             } else {
                 data?.on('data', function (chunk) {
@@ -15,7 +15,7 @@ export default function (server: http.Server, docker: Dockerode) {
                     console.log(parsed_data)
                     broadcast(JSON.stringify(parsed_data));
                 });
-            }
+            }*/
         });
     })
 
