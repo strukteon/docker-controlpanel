@@ -1,4 +1,6 @@
-{
+// tslint:disable-next-line:variable-name
+const stats_template: string =
+`{
     "access_rights": %a,
     "num_blocks_allocated": %b,
     "bytes_per_block": %B,
@@ -15,4 +17,6 @@
     "last_access_time": "%X",
     "last_modification_time": "%Y",
     "last_change_time": "%Z"
-},
+},`;
+
+export default stats_template;

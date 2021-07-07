@@ -1,4 +1,0 @@
-for f in $_DIR*;
-do
-    stat -c "$_STATS_TEMPLATE_ESCAPED" "$f";
-done

@@ -1,7 +1,7 @@
 const fs = require("fs")
 async function go() {
-    let stats_template = (await fs.promises.readFile("endpoints/volume_inspect/list_files/stats_template.txt")).toString();
-    let list_file_stats_command = (await fs.promises.readFile("endpoints/volume_inspect/list_files/list_file_stats_command.txt")).toString();
+    let stats_template = (await fs.promises.readFile("endpoints/volume_inspect/list_files/stats_template.ts")).toString();
+    let list_file_stats_command = (await fs.promises.readFile("endpoints/volume_inspect/list_files/list_file_stats_command.ts")).toString();
 
     let path = "/tmp/myvolume/";
     let parsed = list_file_stats_command
