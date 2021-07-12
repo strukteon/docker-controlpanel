@@ -2,6 +2,7 @@ import { Router, Response } from "express";
 import Endpoint from "../Endpoint";
 import dockerode from "dockerode";
 import list_files from "./volume_inspect/list_files";
+import {buildErrorResponse} from "../response_builder";
 
 const status: Endpoint = {
     path: "/volumes",
@@ -25,7 +26,7 @@ status.router.get("/all", async (req, res: Response) => {
         }
     }
 
-    /**/for (let container of containers) {
+    for (let container of containers) {
         for (let mount of container.Mounts) {
             if (mount.Type !== "volume") continue;
                 // @ts-ignore
@@ -41,17 +42,22 @@ status.router.get("/all", async (req, res: Response) => {
 
 status.router.get("/:name/files", async (req, res: Response) => {
     const volume_name = req.params.name;
-    console.log(req.query.path)
+    console.log("path:", req.query.path)
     if (! status.docker) return;
 
     const path = req.query.path?.toString() ?? "";
     const filters = {
         file_type: req.params.file_type ?? undefined
     }
-    console.log(filters)
-    const file_info = await list_files(status.docker, volume_name, path, filters);
 
-    res.json(file_info);
+    try {
+        const file_info = await list_files(status.docker, volume_name, path, filters);
+        return res.json(file_info);
+    } catch (e) {
+        if (e.statusCode === 404)
+            return res.json(buildErrorResponse("volume not found"))
+        throw e;
+    }
 });
 
 status.router.delete("/:name", async (req, res: Response) => {

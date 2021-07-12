@@ -8,6 +8,9 @@ export default async function list_files(docker: dockerode | undefined, volumeNa
         throw new Error("dockerode object is undefined");
     }
 
+    // check if volume exists
+    await docker.getVolume(volumeName).inspect();
+
     const stdout = new streams.WritableStream();
 
     const list_script = list_file_stats_command(`/tmp/myvolume/${dir}`);
@@ -16,7 +19,7 @@ export default async function list_files(docker: dockerode | undefined, volumeNa
             Mounts: [
                 {
                     ReadOnly: false,
-                    Source:   "34f180affc92b8e01af5cd18b1dffa3eec59cd89c23f5bf6b945e492b04200a0",
+                    Source:   volumeName,
                     Target:   "/tmp/myvolume",
                     Type:     "volume",
                 },
