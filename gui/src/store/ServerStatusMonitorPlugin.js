@@ -1,4 +1,7 @@
 import { handleWebsocketMessage as volumesMessageHandler } from "@/store/VolumesModule";
+import { handleWebsocketMessage as containersMessageHandler } from "./ContainersModule";
+
+"./ContainersModule";
 
 export default (webSocket) => (store) => {
     console.log(store)
@@ -9,6 +12,9 @@ export default (webSocket) => (store) => {
         switch (data.Type) {
             case "sa":
                 volumesMessageHandler(data);
+                break;
+            case "container":
+                containersMessageHandler(store, data);
         }
     })
 }

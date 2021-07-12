@@ -38,7 +38,8 @@ export const containersModule = {
     }
 }
 
-export function handleWebsocketMessage(msg) {
-    // console.log(msg)
-    msg.toString();
+export function handleWebsocketMessage(store, data) {
+    if (data.status === "destroy") {
+        store.commit("containers/removeContainer", { containerId: data.id });
+    }
 }

@@ -16,6 +16,7 @@ export default async function list_files(docker: dockerode | undefined, volumeNa
     const list_script = list_file_stats_command(`/tmp/myvolume/${dir}`);
     const create_options = {
         HostConfig: {
+            AutoRemove: true,
             Mounts: [
                 {
                     ReadOnly: false,
@@ -30,6 +31,7 @@ export default async function list_files(docker: dockerode | undefined, volumeNa
     await docker.run("busybox", ["/bin/sh", "-c", list_script], stdout, create_options);
 
     const raw_output = stdout.toString();
+    console.log(raw_output)
 
     if (raw_output.startsWith("/bin/sh: cd: line 1: can't cd to"))
         return buildErrorResponse("path does not exist in volume");
@@ -46,7 +48,10 @@ export default async function list_files(docker: dockerode | undefined, volumeNa
             if (!(file[filter_option] && file[filter_option] === filters[filter_option]) && filters[filter_option] !== undefined)
                 return false;
         return true;
-    })
+    });
+    for (let filteredElement of filtered) {
+        filteredElement.file_name = filteredElement.file_name.replace("\./", "");
+    }
 
     return buildSuccessResponse(filtered);
 }

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <file-list-item v-for="file in files" :key="file.inode_number" :file-obj="file"/>
+    <div @click="curPath = curPath.substring(0, curPath.lastIndexOf('/')); loadFolder(curPath)">------ Go up</div>
+    <file-list-item v-for="file in files" :key="file.inode_number" :file-obj="file" @click="curPath += file.file_name + '/'; loadFolder(curPath)"/>
   </div>
 </template>
 
@@ -11,6 +12,11 @@ import FileListItem from "./FileListItem";
 export default {
   name: "InspectVolume",
   components: {FileListItem},
+  data() {
+    return {
+      curPath: ""
+    }
+  },
   mounted() {
     this.$store.dispatch("volumes/loadFolder", { axios: this.axios, volumeId: this.$route.params.volumeName, path: '' })
     console.log(this.$route.params)

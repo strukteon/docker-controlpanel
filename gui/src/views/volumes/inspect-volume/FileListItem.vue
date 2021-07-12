@@ -1,5 +1,5 @@
 <template>
-  <div @click="loadFolder">
+  <div>
     <font-awesome-icon :icon="fileObj.file_type == 'regular file' ? 'file' : 'folder'"/>
     {{ fileObj.file_name }}
   </div>

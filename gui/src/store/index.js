@@ -3,7 +3,7 @@ import { volumesModule } from "@/store/VolumesModule";
 import ServerStatusMonitorPlugin from "@/store/ServerStatusMonitorPlugin";
 import {imagesModule} from "@/store/ImagesModule";
 import {networksModule} from "@/store/NetworksModule";
-import {containersModule} from "@/store/ContainersVolume";
+import {containersModule} from "@/store/ContainersModule";
 
 export default createStore({
   modules: {

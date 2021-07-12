@@ -1,13 +1,14 @@
-import WebSocket from 'ws';
-import http from "http";
 import Dockerode from "dockerode";
+import http from "http";
+import WebSocket from "ws";
 
 export default function (server: http.Server, docker: Dockerode) {
+    console.log("starting websocket server")
     const wss = new WebSocket.Server({ server });
 
     docker.getEvents({}, (err, data) => {
         docker.getEvents({}, function (err, data) {
-           /* if(err){
+            if(err){
                 console.log(err.message);
             } else {
                 data?.on('data', function (chunk) {
@@ -15,7 +16,7 @@ export default function (server: http.Server, docker: Dockerode) {
                     console.log(parsed_data)
                     broadcast(JSON.stringify(parsed_data));
                 });
-            }*/
+            }
         });
     })
 

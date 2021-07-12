@@ -139,6 +139,11 @@ export default {
     padding: 0 .4rem;
     line-height: .875rem;
   }
+
+  .volumes a {
+    text-decoration: unset;
+    color: unset;
+  }
 </style>
 
 <style>

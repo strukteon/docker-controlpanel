@@ -13,10 +13,10 @@ import events_websocket from "./events_websocket";
 const wss = events_websocket(server, docker);
 
 // set default config
-process.env.PORT = process.env.PORT ?? '80';
+process.env.PORT = process.env.PORT ?? "80";
 
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 
 start();
 
