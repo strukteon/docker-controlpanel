@@ -5,7 +5,7 @@ export const volumesModule = {
 
     state: () => ({
         volumes: { },
-        curFolder: null
+        curFolder: [ ]
     }),
     getters: {
         volumes: state => state.volumes,
@@ -14,7 +14,12 @@ export const volumesModule = {
             if (comparator) return volumes.sort(comparator);
             return volumes;
         },
-        currentOpenFolder: state => state.curFolder
+        curFolder: state => state.curFolder,
+        curFolderArray: state => (comparator) => {
+            const files = Object.values(state.curFolder);
+            if (comparator) return files.sort(comparator);
+            return files;
+        },
     },
     mutations: {
         setVolumes(state, { volumes }) {
@@ -29,7 +34,7 @@ export const volumesModule = {
             state.curFolder = files;
         },
         clearCurrentOpenFolder(state) {
-            state.curFolder = null;
+            state.curFolder = [ ];
         }
     },
     actions: {

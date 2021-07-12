@@ -1,9 +1,12 @@
-import { faHdd, faSignInAlt, faMugHot, faSortAlphaDown, faSortAlphaUp } from "@fortawesome/free-solid-svg-icons";
+import { faFile, faFolder, faHdd, faSignInAlt, faMugHot, faSortAlphaDown, faSortAlphaUp } from "@fortawesome/free-solid-svg-icons";
+import {  } from "@fortawesome/free-regular-svg-icons";
 
 export default [
     faHdd,
     faSignInAlt,
     faMugHot,
     faSortAlphaDown,
-    faSortAlphaUp
+    faSortAlphaUp,
+    faFolder,
+    faFile
 ]
