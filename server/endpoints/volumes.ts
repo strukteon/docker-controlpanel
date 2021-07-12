@@ -45,7 +45,11 @@ status.router.get("/:name/files", async (req, res: Response) => {
     if (! status.docker) return;
 
     const path = req.query.path?.toString() ?? "";
-    const file_info = await list_files(status.docker, volume_name, path);
+    const filters = {
+        file_type: req.params.file_type ?? undefined
+    }
+    console.log(filters)
+    const file_info = await list_files(status.docker, volume_name, path, filters);
 
     res.json(file_info);
 });
