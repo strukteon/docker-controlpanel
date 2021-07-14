@@ -14,6 +14,7 @@ export const volumesModule = {
             if (comparator) return volumes.sort(comparator);
             return volumes;
         },
+        volumeByName: state => name => state.volumes[name],
         curFolder: state => state.curFolder,
         curFolderArray: state => (comparator) => {
             const files = Object.values(state.curFolder);
