@@ -1,4 +1,4 @@
-import { faTrash, faArrowLeft, faArrowRight, faArrowUp, faFile, faFolder, faHdd, faSignInAlt, faMugHot, faSortAlphaDown, faSortAlphaUp } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight, faTrash, faArrowLeft, faArrowRight, faArrowUp, faFile, faFolder, faHdd, faSignInAlt, faMugHot, faSortAlphaDown, faSortAlphaUp } from "@fortawesome/free-solid-svg-icons";
 import {  } from "@fortawesome/free-regular-svg-icons";
 
 export default [
@@ -13,4 +13,5 @@ export default [
     faArrowRight,
     faArrowUp,
     faTrash,
+    faChevronRight
 ]

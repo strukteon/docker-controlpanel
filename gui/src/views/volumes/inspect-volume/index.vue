@@ -46,6 +46,7 @@ export default {
       volumeByName: 'volumes/volumeByName'
     }),
     files() {
+      if (!this.curFolder) return []
       const sortAlphabetically = (a, b) => a.file_name.localeCompare(b.file_name);
       const folders = this.curFolder.filter(f => f.file_type === "directory").sort(sortAlphabetically);
       const files = this.curFolder.filter(f => f.file_type !== "directory").sort(sortAlphabetically);
