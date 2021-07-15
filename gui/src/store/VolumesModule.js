@@ -5,7 +5,8 @@ export const volumesModule = {
 
     state: () => ({
         volumes: { },
-        curFolder: [ ]
+        curFolder: [ ],
+        filesAreLoading: false,
     }),
     getters: {
         volumes: state => state.volumes,
@@ -21,6 +22,7 @@ export const volumesModule = {
             if (comparator) return files.sort(comparator);
             return files;
         },
+        filesAreLoading: state => state.filesAreLoading,
     },
     mutations: {
         setVolumes(state, { volumes }) {
@@ -36,6 +38,9 @@ export const volumesModule = {
         },
         clearCurrentOpenFolder(state) {
             state.curFolder = [ ];
+        },
+        setFilesAreLoading(state, { filesAreLoading }) {
+            state.filesAreLoading = filesAreLoading;
         }
     },
     actions: {
@@ -54,9 +59,11 @@ export const volumesModule = {
             commit('removeVolume', { volumeId: volumeId });
         },
         async loadFolder({ commit }, { axios, volumeId, path }) {
+            commit("setFilesAreLoading", { filesAreLoading: true });
             const res = await axios.get(`//${getApiUrl()}/volumes/${volumeId}/files?path=${path}`);
             console.log(res)
-            commit("setCurrentOpenFolder", { files: res.data.data })
+            commit("setCurrentOpenFolder", { files: res.data.data });
+            commit("setFilesAreLoading", { filesAreLoading: false });
         }
     }
 }

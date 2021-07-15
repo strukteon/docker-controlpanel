@@ -1,11 +1,11 @@
 <template>
   <div class="fs-navbar">
-    <div class="arrow" @click="goBackHistory();"><font-awesome-icon icon="arrow-left"/></div>
-    <div class="arrow" @click="goForwardHistory();"><font-awesome-icon icon="arrow-right"/></div>
-    <div class="arrow" @click="pushParentFolder();"><font-awesome-icon icon="arrow-up"/></div>
+    <!--<div class="arrow" @click="goBackHistory();"><font-awesome-icon icon="arrow-left"/></div>
+    <div class="arrow" @click="goForwardHistory();"><font-awesome-icon icon="arrow-right"/></div>-->
+    <div :class="{'arrow': true, 'arrow-disabled': path.length === 1}" @click="pushParentFolder();"><font-awesome-icon icon="arrow-up"/></div>
     <div class="path-list">
       <div class="path-item" v-for="(folder, index) in path" :key="folder + index">
-        <span class="folder-text">{{ folder }}</span>
+        <span class="folder-text" @click="pushPathIndex(index)">{{ folder }}</span>
         <font-awesome-icon class="chevron-right" icon="chevron-right"/>
       </div>
     </div>
@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       path: [ '' ],
-      history: [ [ '' ] ], // store up to ten past paths,
+      history: [ [ '' ] ], // store up to ten past paths, not used yet
       historyPos: 0,
     }
   },
@@ -32,9 +32,18 @@ export default {
       this.notifyChanges();
     },
     pushParentFolder() {
+      if (this.path.length === 1)
+        return;
       this.path.pop();
       this.updateHistory();
       this.notifyChanges()
+    },
+    pushPathIndex(index) {
+      if (index === this.path.length - 1)
+        return;
+      this.path = this.path.slice(0, index + 1);
+      this.updateHistory();
+      this.notifyChanges();
     },
     updateHistory() {
       console.log(`old history ${this.history.join("|")}`)
@@ -94,6 +103,10 @@ export default {
   }
   .fs-navbar .arrow:hover {
     background-color: rgba(0, 0, 0, .1);
+  }
+  .fs-navbar .arrow.arrow-disabled {
+    pointer-events: none;
+    color: rgba(0, 0, 0, .4);
   }
 
   .path-list {

@@ -13,12 +13,13 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.3",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/vue-fontawesome": "^3.0.0-4",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "vue": "^3.0.0",
     "vue-axios": "^3.2.4",
+    "vue-custom-context-menu": "^3.0.3",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0",
-    "axios": "^0.21.1"
+    "vuex": "^4.0.0-0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

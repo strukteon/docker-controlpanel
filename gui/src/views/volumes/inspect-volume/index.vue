@@ -5,7 +5,7 @@
       <font-awesome-icon class="volume-icon" icon="hdd"/>
       <div class="volume-title-section">
         <div class="volume-name">
-          {{ volumeData?.Name }}
+          {{ volumeData?.Name }} {{ filesAreLoading }}
         </div>
         <div class="in-use-by">In use by {{ volumeData?.UsageData?.RefCount }} containers</div>
       </div>
@@ -13,9 +13,31 @@
         <font-awesome-icon icon="trash"/>
       </div>
     </div>
+
     <filesystem-navbar ref="fs_navbar" @loc-change="loadCurFolder"/>
-    <file-list-item v-for="file in files" :key="file.inode_number" :file-obj="file"
-                    @click="$refs.fs_navbar.pushFolder(file.file_name)"/>
+
+    <context-menu ref="cm-for-base-header">
+      <!-- we'll discuss later on what to insert here -->
+      asdkosapd
+    </context-menu>
+
+    <table v-context-menu="'cm-for-base-header'">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Modified</th>
+          <th>Size</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody v-if="! filesAreLoading">
+        <file-list-item v-for="file in files" :key="file.inode_number" :file-obj="file"
+                        @leftclick="handleFileClick"/>
+      </tbody>
+      <div v-else>
+        Loading...
+      </div>
+    </table>
   </div>
 </template>
 
@@ -43,10 +65,12 @@ export default {
   computed: {
     ...mapGetters({
       curFolder: 'volumes/curFolder',
-      volumeByName: 'volumes/volumeByName'
+      volumeByName: 'volumes/volumeByName',
+      filesAreLoading: 'volumes/filesAreLoading'
     }),
     files() {
       if (!this.curFolder) return []
+
       const sortAlphabetically = (a, b) => a.file_name.localeCompare(b.file_name);
       const folders = this.curFolder.filter(f => f.file_type === "directory").sort(sortAlphabetically);
       const files = this.curFolder.filter(f => f.file_type !== "directory").sort(sortAlphabetically);
@@ -64,6 +88,11 @@ export default {
         volumeId: this.volumeName,
         path: e
       })
+    },
+    handleFileClick(file) {
+      if (file.file_type === "directory")
+        this.$refs.fs_navbar.pushFolder(file.file_name)
+
     }
   }
 }
@@ -73,6 +102,7 @@ export default {
   .titlebar {
     display: flex;
     align-items: center;
+    background-color: rgba(0, 0, 0, .03);
   }
 
   .titlebar .go-back {

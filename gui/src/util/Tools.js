@@ -7,7 +7,7 @@ export function readableSize(bytes) {
         return `${Math.floor(bytes / 1e4) / 1e2} MB`
     if (Math.floor(bytes / 1e3) > 0)
         return `${Math.floor(bytes / 1e1) / 1e2} KB`
-    return `${Math.floor(bytes / 1e1) / 1e2} B`
+    return `${bytes} B`
 }
 
 export function readableDateDiff(date) {

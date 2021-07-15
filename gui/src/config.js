@@ -8,6 +8,8 @@ import VueAxios from 'vue-axios';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import fontawesome_icons from "@/fontawesome_icons";
 
+import VCCM from "vue-custom-context-menu";
+
 export function config(vueApp) {
 
     library.add(fontawesome_icons);
@@ -17,6 +19,7 @@ export function config(vueApp) {
         .use(store)
         .use(VueCustomTooltip)
         .use(VueAxios, axios)
+        .use(VCCM)
 
         .component('font-awesome-icon', FontAwesomeIcon)
 }
