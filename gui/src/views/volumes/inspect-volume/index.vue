@@ -16,12 +16,7 @@
 
     <filesystem-navbar ref="fs_navbar" @loc-change="loadCurFolder"/>
 
-    <context-menu ref="cm-for-base-header">
-      <!-- we'll discuss later on what to insert here -->
-      asdkosapd
-    </context-menu>
-
-    <table v-context-menu="'cm-for-base-header'">
+    <table>
       <thead>
         <tr>
           <th>Name</th>
