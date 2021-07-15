@@ -1,7 +1,7 @@
 <template>
   <tr @click="$emit('leftclick', fileObj)">
     <td>
-      <font-awesome-icon :icon="fileObj.file_type == 'regular file' ? 'file' : 'folder'"/>
+      <font-awesome-icon :icon="fileObj.file_type === 'file' ? 'file' : 'folder'"/>
       {{ fileObj.file_name }}
     </td>
     <td>{{ new Date(fileObj.last_modification_time * 1000).toLocaleString() }}</td>

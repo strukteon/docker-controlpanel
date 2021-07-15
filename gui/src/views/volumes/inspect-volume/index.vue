@@ -85,6 +85,7 @@ export default {
       })
     },
     handleFileClick(file) {
+      console.log(file)
       if (file.file_type === "directory")
         this.$refs.fs_navbar.pushFolder(file.file_name)
 
