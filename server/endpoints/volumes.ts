@@ -3,6 +3,7 @@ import Endpoint from "../Endpoint";
 import dockerode from "dockerode";
 import list_files from "./volume_inspect/list_files";
 import {buildErrorResponse} from "../response_builder";
+import open_file from "./volume_inspect/open_file";
 
 const status: Endpoint = {
     path: "/volumes",
@@ -53,6 +54,21 @@ status.router.get("/:name/files", async (req, res: Response) => {
     try {
         const file_info = await list_files(status.docker, volume_name, path, filters);
         return res.json(file_info);
+    } catch (e) {
+        if (e.statusCode === 404)
+            return res.json(buildErrorResponse("volume not found"))
+        throw e;
+    }
+});
+status.router.get("/:name/file", async (req, res: Response) => {
+    const volume_name = req.params.name;
+    console.log("path:", req.query.path)
+    if (! status.docker) return;
+
+    const path = req.query.path?.toString() ?? "";
+
+    try {
+        await open_file(status.docker, res, volume_name, path);
     } catch (e) {
         if (e.statusCode === 404)
             return res.json(buildErrorResponse("volume not found"))

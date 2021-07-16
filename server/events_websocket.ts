@@ -13,7 +13,7 @@ export default function (server: http.Server, docker: Dockerode) {
             } else {
                 data?.on('data', function (chunk) {
                     const parsed_data = JSON.parse(chunk.toString());
-                    console.log(parsed_data)
+                    // console.log(parsed_data)
                     broadcast(JSON.stringify(parsed_data));
                 });
             }

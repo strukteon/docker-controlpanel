@@ -12,11 +12,17 @@ export default async function list_files(docker: dockerode | undefined, volumeNa
     await docker.getVolume(volumeName).inspect();
 
     const stdout = new streams.WritableStream();
-    const out: string[] = []
+    let str_out: string = "";
+    let out: string[] = []
+    const files = []
     stdout._write = (chunk, encoding, next) => {
-        let x = chunk.toString();
-        console.log(x);
-        out.push(x)
+        let chu = chunk.toString();
+        str_out += chu;
+        if (str_out.indexOf("}") > -1) {
+            // console.log(out.substring(0, out.indexOf("}") + 1));
+            console.log(str_out.length, str_out)
+        }
+        out.push(chu)
         next();
     }
 
@@ -36,11 +42,11 @@ export default async function list_files(docker: dockerode | undefined, volumeNa
     };
 
     let x = await docker.run("busybox", ["/bin/sh", "-c", list_script], stdout, create_options);
-    console.log("x === ", x);
+    // console.log("x === ", x);
 
     //const raw_output = stdout.toString()
     const raw_output = out.join('');
-    console.log(raw_output)
+    //console.log(raw_output)
 
     if (raw_output.startsWith("/bin/sh: cd: line 1: can't cd to"))
         return buildErrorResponse("path does not exist in volume");
@@ -51,7 +57,7 @@ export default async function list_files(docker: dockerode | undefined, volumeNa
             .slice(0, -1) // remove trailing comma
         + "]";
 
-    console.log(raw_output.length)
+    //console.log(raw_output.length)
 
     const output_json = JSON.parse(output);
     const filtered = output_json.filter((file: any) => {
