@@ -5,12 +5,12 @@
       <font-awesome-icon class="volume-icon" icon="hdd"/>
       <div class="volume-title-section">
         <div class="volume-name">
-          {{ volumeData?.Name }} {{ filesAreLoading }}
+          {{ volumeData?.Name }}
         </div>
         <div class="in-use-by">In use by {{ volumeData?.UsageData?.RefCount }} containers</div>
       </div>
       <div class="volume-actions">
-        <font-awesome-icon icon="trash"/>
+        <!--<font-awesome-icon icon="trash"/>-->
       </div>
     </div>
 
@@ -26,7 +26,7 @@
         </tr>
       </thead>
       <tbody v-if="! filesAreLoading">
-        <file-list-item v-for="file in files" :key="file.inode_number" :file-obj="file"
+        <file-list-item v-for="file in files" :key="file.inode_number" :file-obj="file" :path="$refs.fs_navbar.path.join('/')"
                         @leftclick="handleFileClick"/>
       </tbody>
       <div v-else>
@@ -77,7 +77,6 @@ export default {
   },
   methods: {
     loadCurFolder(e) {
-      console.log(e)
       this.$store.dispatch("volumes/loadFolder", {
         axios: this.axios,
         volumeId: this.volumeName,

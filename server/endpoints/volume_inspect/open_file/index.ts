@@ -12,35 +12,16 @@ export default async function open_file(docker: dockerode | undefined, res: Resp
 
     // check if volume exists
     await docker.getVolume(volumeName).inspect();
-/*
-    const stdout = new streams.WritableStream();
-
-    console.log(fs.readFileSync("git.zip"))
-
-    stdout._write = (chunk, encoding, next) => {
-        res.write(chunk, "binary", ()=>{});
-        console.log(chunk)
-        // console.log(encoding)
-        next();
-    }
 
     const list_script = open_file_command(`/tmp/myvolume/${path}`);
     const create_options = {
         HostConfig: {
-            AutoRemove: true,
-            Mounts: [
-                {
-                    ReadOnly: false,
-                    Source:   volumeName,
-                    Target:   "/tmp/myvolume",
-                    Type:     "volume",
-                },
-            ],
+            Binds: [ `${volumeName}:/tmp/myvolume` ],
         },
-    };*/
+        image: "busybox:latest"
+    };
 
-    // let [error, container] = await docker.run("busybox", ["/bin/sh", "-c", list_script], stdout, create_options);
-    let container = await docker.getContainer("17b3812479a2abecba55f6764336511f9f80acbc1f2efc79c6c1a70af722a4cb");
+    let container = await docker.createContainer(create_options);
     let archive = await container.getArchive({path: "/tmp/myvolume/" + path});
     const writable = new streams.WritableStream();
 

@@ -9,7 +9,8 @@ export default async function list_files(docker: dockerode | undefined, volumeNa
     }
 
     // check if volume exists
-    await docker.getVolume(volumeName).inspect();
+    // console.log(volumeName, docker.getVolume(volumeName))
+    console.log(await docker.getVolume(volumeName).inspect());
 
     const stdout = new streams.WritableStream();
     let str_out: string = "";

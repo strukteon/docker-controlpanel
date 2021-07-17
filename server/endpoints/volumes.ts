@@ -55,6 +55,7 @@ status.router.get("/:name/files", async (req, res: Response) => {
         const file_info = await list_files(status.docker, volume_name, path, filters);
         return res.json(file_info);
     } catch (e) {
+        console.log(e)
         if (e.statusCode === 404)
             return res.json(buildErrorResponse("volume not found"))
         throw e;
@@ -70,6 +71,7 @@ status.router.get("/:name/file", async (req, res: Response) => {
     try {
         await open_file(status.docker, res, volume_name, path);
     } catch (e) {
+        console.log(e)
         if (e.statusCode === 404)
             return res.json(buildErrorResponse("volume not found"))
         throw e;

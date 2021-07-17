@@ -2,14 +2,19 @@
   <div class="app">
     <app-header/>
     <div class="app-body">
-      <div class="sidebar">
+      <div class="sidebar" v-if="! isLoginPage">
         <router-link :to="{ name: 'Dashboard' }">Dashboard</router-link>
         <router-link :to="{ name: 'Containers' }">Containers</router-link>
         <router-link :to="{ name: 'Volumes' }">Volumes</router-link>
         <router-link :to="{ name: 'Networks' }">Networks</router-link>
         <router-link :to="{ name: 'Images' }">Images</router-link>
+        <div class="spacing"/>
+        <router-link to="/settings">
+          <font-awesome-icon icon="cog"/>
+          Settings
+        </router-link>
       </div>
-      <router-view class="view-content"/>
+      <router-view :class="{'view-content': ! isLoginPage}"/>
     </div>
   </div>
 </template>
@@ -17,7 +22,12 @@
 <script>
 import AppHeader from "@/components/AppHeader";
 export default {
-  components: {AppHeader}
+  components: { AppHeader },
+  computed: {
+    isLoginPage() {
+      return this.$route.path.startsWith("/auth");
+    }
+  }
 }
 </script>
 
@@ -38,6 +48,7 @@ export default {
     display: flex;
     flex-direction: column;
     background-color: #e9ebee;
+    padding: .75rem 0;
   }
 
   .sidebar > * {
@@ -49,6 +60,9 @@ export default {
   }
   .sidebar > *:hover {
     color: rgba(0, 0, 0, .7);
+  }
+  .sidebar .spacing {
+    flex-grow: 1;
   }
   .router-link-active {
     color: rgba(0, 0, 0, .7);

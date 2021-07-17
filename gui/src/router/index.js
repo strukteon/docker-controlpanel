@@ -6,6 +6,9 @@ import InspectVolume from '../views/volumes/inspect-volume'
 import Images from '../views/images'
 import Networks from '../views/networks'
 import Containers from '../views/containers'
+import Auth from '../views/auth'
+import Login from '../views/auth/login'
+import Logout from '../views/auth/logout'
 
 const routes = [
   {
@@ -44,6 +47,22 @@ const routes = [
     path: '/containers',
     name: 'Containers',
     component: Containers
+  },
+  {
+    path: '/auth',
+    component: Auth,
+    children: [
+      {
+        path: 'login',
+        name: 'Login',
+        component: Login
+      },
+      {
+        path: 'logout',
+        name: 'Logout',
+        component: Logout
+      }
+    ]
   }
 ]
 

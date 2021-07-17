@@ -49,6 +49,5 @@ export default {
     font-size: 1.2rem;
     padding: .5rem;
     margin-left: .5rem;
-    background-color: red;
   }
 </style>
