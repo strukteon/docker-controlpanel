@@ -1,5 +1,8 @@
 <template>
-  <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam deleniti dolores, iste molestias neque porro
+  <div>
+    <vue-dropdown/>
+    <br>
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam deleniti dolores, iste molestias neque porro
     qui quis reiciendis tempore voluptas. Alias asperiores debitis error incidunt laborum maiores nam nemo quisquam,
     voluptas? Accusantium architecto assumenda aut cum esse facere illo, iste iure nam omnis qui quidem, totam?
     Accusamus accusantium alias aliquid atque, beatae consequatur cum esse et in ipsa iure, minima minus nihil, omnis
@@ -71,8 +74,10 @@
 </template>
 
 <script>
+import VueDropdown from "@/components/dropdown/VueDropdown";
 export default {
-  name: "Dashboard"
+  name: "Dashboard",
+  components: {VueDropdown}
 }
 </script>
 
