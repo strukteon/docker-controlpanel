@@ -6,11 +6,12 @@ import routes from "@/config/routes";
 import Vuex from 'vuex'
 import store from "@/store"
 import axios from "axios";
+import VueAxios from 'vue-axios';
 
 Vue.use(Vuetify)
 Vue.use(VueRouter)
 Vue.use(Vuex)
-Vue.use(axios)
+Vue.use(VueAxios, axios)
 
 export default {
     vuetify: new Vuetify({

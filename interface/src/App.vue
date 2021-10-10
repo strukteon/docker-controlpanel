@@ -11,12 +11,19 @@
       <v-spacer></v-spacer>
 
       <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
+        href="https://github.com/strukteon/docker-controlpanel"
         target="_blank"
         text
       >
         <span class="mr-2">Github</span>
         <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
+      <v-btn
+        href="https://ko-fi.com/strukteon"
+        target="_blank"
+        text
+      >
+        <span class="mr-2">Made with <v-icon>mdi-heart</v-icon> by strukteon</span>
       </v-btn>
     </v-app-bar>
 
@@ -63,7 +70,7 @@ export default {
     selectedNavItem: 'Dashboard',
     navigationItems: [
       { title: 'Dashboard', icon: 'mdi-view-dashboard', to: 'Dashboard' },
-      { title: 'Containers', icon: 'view-dashboard', to: 'ContainersOverview' },
+      { title: 'Containers', icon: 'mdi-package-variant-closed', to: 'ContainersOverview' },
       { title: 'Volumes', icon: 'mdi-harddisk', to: 'VolumesOverview' },
       { title: 'Networks', icon: 'mdi-lan', to: 'NetworksOverview' },
       { title: 'Images', icon: 'mdi-image', to: 'ImagesOverview' },

@@ -63,10 +63,11 @@
     >
       <v-list-item
           v-for="volume in volumes"
-          :key="volume.Name">
+          :key="volume.Name"
+          :to="{ name: 'VolumeInspect', params: { volume: volume.Name } }">
 
         <v-list-item-icon>
-          <v-icon :color="volume.UsageData.RefCount > 0 ? 'success' : undefined">mdi-harddisk</v-icon>
+          <v-icon :color="volume.UsageData.RefCount > 0 ? 'green' : 'grey'">mdi-harddisk</v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
@@ -81,36 +82,13 @@
           </v-list-item-subtitle>
         </v-list-item-content>
 
-        <v-menu>
-          <template v-slot:activator="{ on, attrs }">
-            <v-list-item-action
-                dark
-                icon
-                v-bind="attrs"
-                v-on="on"
-            >
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-list-item-action>
-          </template>
-
-          <v-list>
-            <v-list-item
-                v-for="option in volumeAdvancedOptions"
-                :key="option.title"
-            >
-              <v-list-item-icon><v-icon>{{ option.icon }}</v-icon></v-list-item-icon>
-              <v-list-item-content>{{ option.title }}</v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-
       </v-list-item>
     </v-list>
   </div>
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import { mapGetters } from "vuex";
 import { readableSize, readableDateDiff } from "@/util/Tools";
 
 export default {
