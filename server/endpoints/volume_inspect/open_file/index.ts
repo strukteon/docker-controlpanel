@@ -4,6 +4,7 @@ import open_file_command from "./open_file_command";
 import {Response} from "express";
 
 import fs from "fs"
+import stats_template from "../list_files/stats_template";
 
 export default async function open_file(docker: dockerode | undefined, res: Response, volumeName: string, path: string) {
     if (!docker) {
@@ -14,14 +15,33 @@ export default async function open_file(docker: dockerode | undefined, res: Resp
     await docker.getVolume(volumeName).inspect();
 
     const list_script = open_file_command(`/tmp/myvolume/${path}`);
+    // const create_options = {
+    //     HostConfig: {
+    //         Binds: [ `${volumeName}:/tmp/myvolume` ],
+    //     },
+    //     image: "busybox:latest"
+    // };
+
     const create_options = {
         HostConfig: {
-            Binds: [ `${volumeName}:/tmp/myvolume` ],
+            Mounts: [
+                {
+                    ReadOnly: false,
+                    Source:   volumeName,
+                    Target:   "/tmp/myvolume",
+                    Type:     "volume",
+                },
+            ],
         },
-        image: "busybox:latest"
     };
+    const stdout = new streams.WritableStream();
 
-    let container = await docker.createContainer(create_options);
+    stdout._write = (chunk, encoding, next) => {
+        let chu = chunk.toString();
+        console.log("output:", chu);
+        next();
+    }
+    let container = (await docker.run("busybox", ["/bin/sh", "-c", `stat -c "${stats_template.replace(/"/g, '\\"')}" "/tmp/myvolume/${path}"`], stdout, create_options))[1];
     let archive = await container.getArchive({path: "/tmp/myvolume/" + path});
     const writable = new streams.WritableStream();
 
