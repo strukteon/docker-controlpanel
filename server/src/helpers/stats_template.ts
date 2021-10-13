@@ -1,3 +1,22 @@
+export type FileStats = {
+    access_rights: number,
+    "num_blocks_allocated": number,
+    "bytes_per_block": number,
+    "file_type": string,
+    "owner_group_id": number,
+    "owner_group_name": string,
+    "num_hard_links": number,
+    "inode_number": number,
+    "file_name": string,
+    "io_block_size": number,
+    "total_size": number,
+    "owner_user_id": number,
+    "owner_user_name": string,
+    "last_access_time": string,
+    "last_modification_time": string,
+    "last_change_time": string
+}
+
 const statsTemplate: string =
 `{
     "access_rights": %a,

@@ -47,7 +47,18 @@
 
       </v-tab-item>
       <v-tab-item>Details</v-tab-item>
-      <v-tab-item>Containers</v-tab-item>
+      <v-tab-item>
+
+        <container-list-item
+            v-for="container in volume.Containers"
+            :key="container.Id"
+            :container="container"/>
+
+        <p
+            class="pa-2 grey--text"
+            v-if="volume.Containers.length < 1">Not used in any container</p>
+
+      </v-tab-item>
     </v-tabs-items>
 
   </div>
@@ -57,10 +68,11 @@
 import {mapGetters} from "vuex";
 import FileListItem from "@/views/volumes/inspect/FileListItem";
 import FolderNavbar from "@/views/volumes/inspect/FolderNavbar";
+import ContainerListItem from "@/views/containers/ContainerListItem";
 
 export default {
   name: "VolumeInspect",
-  components: {FolderNavbar, FileListItem},
+  components: {ContainerListItem, FolderNavbar, FileListItem},
   data: () => ({
     openedTab: 0,
     volumeName: null
@@ -101,6 +113,9 @@ export default {
         path: e
       })
     },
+    x() {
+      console.log(this.volume)
+    }
   }
 }
 </script>

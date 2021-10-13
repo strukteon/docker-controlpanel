@@ -1,7 +1,6 @@
 import dockerode from "dockerode";
-import streams from "memory-streams";
-import list_file_stats_command from "./list_file_stats_command";
 import {buildErrorResponse, buildSuccessResponse} from "../../../response_builder";
+import {createBusyboxContainer, listBusyboxFiles} from "../../../src/helpers/BusyboxRunner";
 
 export default async function list_files(docker: dockerode | undefined, volumeName: string, dir: string = "", filters: any = {}) {
     if (!docker) {
@@ -9,69 +8,17 @@ export default async function list_files(docker: dockerode | undefined, volumeNa
     }
 
     // check if volume exists
-    // console.log(volumeName, docker.getVolume(volumeName))
     console.log(await docker.getVolume(volumeName).inspect());
 
-    const stdout = new streams.WritableStream();
-    let str_out: string = "";
-    let out: string[] = []
-    const files = []
-    stdout._write = (chunk, encoding, next) => {
-        let chu = chunk.toString();
-        str_out += chu;
-        if (str_out.indexOf("}") > -1) {
-            // console.log(out.substring(0, out.indexOf("}") + 1));
-            console.log(str_out.length, str_out)
-        }
-        out.push(chu)
-        next();
-    }
+    const container = await createBusyboxContainer(docker, volumeName);
 
-    const list_script = list_file_stats_command(`/tmp/myvolume/${dir}`);
-    const create_options = {
-        HostConfig: {
-            AutoRemove: true,
-            Mounts: [
-                {
-                    ReadOnly: false,
-                    Source:   volumeName,
-                    Target:   "/tmp/myvolume",
-                    Type:     "volume",
-                },
-            ],
-        },
-    };
+    let files = await listBusyboxFiles(container, dir);
 
-    let x = await docker.run("busybox", ["/bin/sh", "-c", list_script], stdout, create_options);
-    // console.log("x === ", x);
-
-    //const raw_output = stdout.toString()
-    const raw_output = out.join('');
-    //console.log(raw_output)
-
-    if (raw_output.startsWith("/bin/sh: cd: line 1: can't cd to"))
-        return buildErrorResponse("path does not exist in volume");
-
-    const output = "[" +
-        raw_output
-            .replace(/\s*[\n\r]/g, "") // remove all line breaks
-            .slice(0, -1) // remove trailing comma
-        + "]";
-
-    //console.log(raw_output.length)
-
-    const output_json = JSON.parse(output);
-    const filtered = output_json.filter((file: any) => {
-        for (let filter_option in filters)
-            if (!(file[filter_option] && file[filter_option] === filters[filter_option]) && filters[filter_option] !== undefined)
-                return false;
-        return true;
-    });
-    for (let elem of filtered) {
+    for (let elem of files) {
         elem.file_name = elem.file_name.replace("\./", "");
         if (['regular empty file', 'regular file'].includes(elem.file_type))
             elem.file_type = 'file';
     }
 
-    return buildSuccessResponse(filtered);
+    return buildSuccessResponse(files);
 }
