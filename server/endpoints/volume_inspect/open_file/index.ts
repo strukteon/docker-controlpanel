@@ -5,12 +5,25 @@ import {Response} from "express";
 
 import fs from "fs"
 import stats_template from "../list_files/stats_template";
+import {
+    busyboxIsInstalled,
+    createBusyboxContainer,
+    listBusyboxFiles,
+    removeBusyboxContainer
+} from "../../../src/helpers/BusyboxRunner";
 
 export default async function open_file(docker: dockerode | undefined, res: Response, volumeName: string, path: string) {
     if (!docker) {
         throw new Error("dockerode object is undefined");
     }
 
+    let container = await createBusyboxContainer(docker, volumeName);
+    console.log("created container");
+    await listBusyboxFiles(container, "/");
+    res.end();
+   // await removeBusyboxContainer(container);
+    console.log("removed container")
+/*
     // check if volume exists
     await docker.getVolume(volumeName).inspect();
 
@@ -89,5 +102,5 @@ export default async function open_file(docker: dockerode | undefined, res: Resp
         res.end()
     });
         archive.pipe(writable)
-    //res.send("asd")
+    // res.send("asd")*/
 }
