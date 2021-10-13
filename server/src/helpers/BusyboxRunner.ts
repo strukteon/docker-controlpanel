@@ -60,7 +60,7 @@ export async function listBusyboxFiles(container: Container, folder: string): Pr
         AttachStdout: true,
         Cmd: [ "sh", "-c", list_file_stats_command(`/tmp/volume${folder}`)],
     };
-    await container.start();
+
     let exec = await container.exec(execOptions);
     let stream = (await exec.start({}));
 
@@ -97,7 +97,7 @@ export async function getBusyboxFileInfo(container: Container, path: string): Pr
         AttachStdout: true,
         Cmd: [ "sh", "-c", statsCommand(`/tmp/volume${path}`).join(" ")],
     };
-    await container.start();
+
     let exec = await container.exec(execOptions);
     let stream = (await exec.start({}));
     let fileStats: FileStats = await new Promise((resolve: any) => {

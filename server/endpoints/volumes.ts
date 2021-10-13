@@ -1,9 +1,8 @@
 import { Router, Response } from "express";
 import Endpoint from "../Endpoint";
 import dockerode from "dockerode";
-import list_files from "./volume_inspect/list_files";
 import {buildErrorResponse} from "../response_builder";
-import open_file from "./volume_inspect/open_file";
+import {createBusyboxContainer, listBusyboxFiles, sendBusyboxArchiveOrFile} from "../src/helpers/BusyboxRunner";
 
 const status: Endpoint = {
     path: "/volumes",
@@ -12,11 +11,9 @@ const status: Endpoint = {
 
 status.router.get("/all", async (req, res: Response) => {
     let [containers, disk_usage] = await Promise.all([
-        status.docker?.listContainers({all: true}),
-        status.docker?.df()
+        status.docker!.listContainers({all: true}),
+        status.docker!.df()
     ]);
-    if (! containers || ! disk_usage?.Volumes)
-        return res.json("error");
 
     let volume_obj: Object = disk_usage.Volumes.reduce((obj: Object, cur: any) => ({...obj, [cur.Name]: cur}), {});
     for (const volumeObjElement in volume_obj) {
@@ -38,38 +35,39 @@ status.router.get("/all", async (req, res: Response) => {
                 })
         }
     }
+
     res.json(Object.values(volume_obj));
 });
 
 status.router.get("/:name/files", async (req, res: Response) => {
     const volume_name = req.params.name;
-    console.log("path:", req.query.path)
-    if (! status.docker) return;
-
     const path = req.query.path?.toString() ?? "";
-    const filters = {
-        file_type: req.params.file_type ?? undefined
-    }
 
     try {
-        const file_info = await list_files(status.docker, volume_name, path, filters);
-        return res.json(file_info);
+        await status.docker!.getVolume(volume_name).inspect();
+        const container = await createBusyboxContainer(status.docker!, volume_name);
+        await container.start();
+        const file_info = await listBusyboxFiles(container, path);
+        res.json(file_info);
+        await container.stop();
+        await container.remove();
     } catch (e) {
-        console.log(e)
         if (e.statusCode === 404)
             return res.json(buildErrorResponse("volume not found"))
         throw e;
     }
 });
-status.router.get("/:name/file", async (req, res: Response) => {
+status.router.get("/:name/download-file", async (req, res: Response) => {
     const volume_name = req.params.name;
-    console.log("path:", req.query.path)
-    if (! status.docker) return;
-
     const path = req.query.path?.toString() ?? "";
 
     try {
-        await open_file(status.docker, res, volume_name, path);
+        await status.docker!.getVolume(volume_name).inspect();
+        const container = await createBusyboxContainer(status.docker!, volume_name);
+        await container.start();
+        await sendBusyboxArchiveOrFile(container, res, path);
+        await container.stop();
+        await container.remove();
     } catch (e) {
         console.log(e)
         if (e.statusCode === 404)
