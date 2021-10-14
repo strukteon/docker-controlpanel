@@ -2,12 +2,14 @@ import { Router, Response } from "express";
 import Endpoint from "../Endpoint";
 import dockerode from "dockerode";
 import {buildErrorResponse} from "../response_builder";
-import {createBusyboxContainer, listBusyboxFiles, sendBusyboxArchiveOrFile} from "../src/helpers/BusyboxRunner";
+import {createBusyboxContainer, listBusyboxFiles, sendBusyboxArchiveOrFile} from "../src/helpers/busyboxrunner/BusyboxRunner";
 
 const status: Endpoint = {
     path: "/volumes",
     router: Router(),
 }
+
+
 
 status.router.get("/all", async (req, res: Response) => {
     let [containers, disk_usage] = await Promise.all([
@@ -44,13 +46,21 @@ status.router.get("/:name/files", async (req, res: Response) => {
     const path = req.query.path?.toString() ?? "";
 
     try {
+        let startTime = Date.now();
         await status.docker!.getVolume(volume_name).inspect();
+        console.log(`getvolume Took ${Date.now() - startTime}ms`); startTime = Date.now();
         const container = await createBusyboxContainer(status.docker!, volume_name);
+        console.log(`create Took ${Date.now() - startTime}ms`); startTime = Date.now();
         await container.start();
+        console.log(`start Took ${Date.now() - startTime}ms`); startTime = Date.now();
         const file_info = await listBusyboxFiles(container, path);
+        console.log(`list Took ${Date.now() - startTime}ms`); startTime = Date.now();
         res.json(file_info);
+        console.log(`res Took ${Date.now() - startTime}ms`); startTime = Date.now();
         await container.stop();
+        console.log(`stop Took ${Date.now() - startTime}ms`); startTime = Date.now();
         await container.remove();
+        console.log(`remove Took ${Date.now() - startTime}ms`); startTime = Date.now();
     } catch (e) {
         if (e.statusCode === 404)
             return res.json(buildErrorResponse("volume not found"))

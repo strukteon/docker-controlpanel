@@ -1,0 +1,21 @@
+{
+  "name": "sysmonitor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run": "node dist/main.js",
+    "dev": "tsc && node dist/main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "os-utils": "0.0.14",
+    "ws": "^8.2.3"
+  },
+  "devDependencies": {
+    "@types/os-utils": "0.0.1",
+    "@types/ws": "^8.2.0",
+    "typescript": "^4.4.4"
+  }
+}

@@ -75,11 +75,13 @@ export default {
   components: {ContainerListItem, FolderNavbar, FileListItem},
   data: () => ({
     openedTab: 0,
-    volumeName: null
+    volumeName: null,
+    fileExplorerWebsocket: null
   }),
   mounted() {
     this.volumeName = this.$route.params.volume;
-    this.$store.dispatch("volumes/loadFolder", {axios: this.axios, volumeId: this.volumeName, path: ''})
+    this.$store.dispatch("volumes/loadFolder", {axios: this.axios, volumeId: this.volumeName, path: ''});
+    this.fileExplorerWebsocket = new WebSocket("ws://localhost/volumes/");
   },
 
   computed: {

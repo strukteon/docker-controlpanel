@@ -1,0 +1,20 @@
+# build
+FROM node:12-alpine AS build
+WORKDIR /usr/src/app
+
+COPY package.json .
+RUN npm install
+
+COPY . .
+RUN npx tsc -p tsconfig.json
+
+# deploy
+FROM node:12-alpine
+WORKDIR /usr/src/app
+
+COPY package.json .
+RUN npm install --production
+
+COPY --from=build /usr/src/app/dist dist
+
+CMD ["npm", "run", "start"]

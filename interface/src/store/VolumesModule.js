@@ -61,7 +61,7 @@ export const volumesModule = {
             commit("setFilesAreLoading", { filesAreLoading: true });
             const res = await axios.get(`//${getApiUrl()}/volumes/${volumeId}/files?path=${path}`);
             console.log("finished loading files", res)
-            commit("setCurrentOpenFolder", { files: res.data.data });
+            commit("setCurrentOpenFolder", { files: res.data });
             commit("setFilesAreLoading", { filesAreLoading: false });
         }
     }

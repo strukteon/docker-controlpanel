@@ -3,6 +3,30 @@ import list_file_stats_command, {statsCommand} from "./list_file_stats_command";
 import {FileStats} from "./stats_template";
 import streams from "memory-streams";
 import { Response } from "express";
+// @ts-ignore
+import exitHook from "async-exit-hook";
+
+const keys = {
+    BUSYBOX_LABEL: "dockstation.busybox"
+}
+
+export function setupExitHook(docker: dockerode): void {
+    exitHook(async (callback: () => void) => {
+        console.log("removing old containers")
+        let containers = await listBusyboxContainers(docker);
+        console.log("listed all", containers)
+        await Promise.all(containers.map(c => (async () => {
+            try {
+                await c.stop();
+            } catch (e) { }
+            await c.remove();
+            console.log("removed " + c.id)
+        })()));
+        console.log("removed all")
+
+        setTimeout(() => callback(), 1000)
+    })
+}
 
 
 export async function busyboxIsInstalled(docker: dockerode): Promise<boolean> {
@@ -13,6 +37,17 @@ export async function busyboxIsInstalled(docker: dockerode): Promise<boolean> {
             return false;
     }
     return true;
+}
+
+export async function listBusyboxContainers(docker: dockerode): Promise<Container[]> {
+    const containers = await docker.listContainers({
+        all: true,
+        filters: {
+            label: [keys.BUSYBOX_LABEL]
+        }
+    });
+
+    return containers.map(c => docker.getContainer(c.Id));
 }
 
 export async function createBusyboxContainer(docker: dockerode, primaryVolume: string, additionalVolumes?: string[]): Promise<any> {
@@ -47,7 +82,7 @@ export async function createBusyboxContainer(docker: dockerode, primaryVolume: s
         },
         Image: "busybox",
         Labels: {
-            "dockstation.busybox": "true",
+            [keys.BUSYBOX_LABEL]: "true",
         },
     };
 
@@ -87,6 +122,9 @@ export async function listBusyboxFiles(container: Container, folder: string): Pr
             .slice(0, -1) // remove trailing comma
         + "]";
     const output_json: FileStats[] = JSON.parse(output);
+    for (let file of output_json) {
+        file.file_name = file.file_name.slice(2)
+    }
     // TODO filtering
     return output_json;
 }
@@ -102,11 +140,9 @@ export async function getBusyboxFileInfo(container: Container, path: string): Pr
     let stream = (await exec.start({}));
     let fileStats: FileStats = await new Promise((resolve: any) => {
         stream.on("data", (d:any) => {
-            console.log(`"${d.toString().trim()}"`);
-            let out = d.toString()
-                .replace(/.+{/g, "{")
-                .replace(/}.+/g, "}")
-            resolve(JSON.parse(out))
+            let str = d.toString();
+            let out = str.slice(str.indexOf("{"), str.lastIndexOf("}") + 1);
+            resolve(JSON.parse(out));
         })
     })
     return fileStats;

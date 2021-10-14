@@ -1,7 +1,5 @@
 <template>
   <div>
-
-
     <v-row>
       <v-col md="2">
         <v-btn-toggle

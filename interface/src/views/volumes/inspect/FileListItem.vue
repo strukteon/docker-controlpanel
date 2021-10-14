@@ -75,7 +75,7 @@ export default {
       this.preventClick();
       console.log(this.file)
       let link = document.createElement("a");
-      link.setAttribute("href", `//${getApiUrl()}/volumes/${this.$route.params.volume}/file?path=${this.path}/${this.file.file_name}`);
+      link.setAttribute("href", `//${getApiUrl()}/volumes/${this.$route.params.volume}/download-file?path=${this.path}/${this.file.file_name}`);
       console.log(link.getAttribute("href"))
       link.setAttribute("download", this.file.file_name);
       document.body.appendChild(link);

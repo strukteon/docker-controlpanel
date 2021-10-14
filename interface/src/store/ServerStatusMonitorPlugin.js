@@ -1,8 +1,6 @@
 import { handleWebsocketMessage as volumesMessageHandler } from "@/store/VolumesModule";
 import { handleWebsocketMessage as containersMessageHandler } from "./ContainersModule";
 
-"./ContainersModule";
-
 export default (webSocket) => (store) => {
     console.log(store)
     webSocket.addEventListener("message", ev => {

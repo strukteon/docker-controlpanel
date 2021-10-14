@@ -3,8 +3,10 @@ import http from 'http';
 import cors from 'cors';
 import { load_endpoints } from "./endpoint_manager";
 import Dockerode from "dockerode";
+import {setupExitHook} from "./src/helpers/busyboxrunner/BusyboxRunner";
 
 const docker = new Dockerode({protocol:'http', host: '127.0.0.1', port: 2375});
+setupExitHook(docker);
 
 const app = express();
 const server = http.createServer(app);
