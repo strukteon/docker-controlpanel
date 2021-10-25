@@ -1,8 +1,8 @@
 import dockerode, {Container, ExecCreateOptions, MountConfig} from "dockerode";
 import list_file_stats_command, {statsCommand} from "./list_file_stats_command";
-import {FileStats} from "./stats_template";
+import {FileStats} from "models";
 import streams from "memory-streams";
-import { Response } from "express";
+import { Response, Request } from "express";
 // @ts-ignore
 import exitHook from "async-exit-hook";
 
@@ -99,11 +99,11 @@ export async function listBusyboxFiles(container: Container, folder: string): Pr
     let exec = await container.exec(execOptions);
     let stream = (await exec.start({}));
 
-    let str_out: string = "";
+    let strOut: string = "";
     let out: string[] = []
     stream.on("data", (data: any) => {
         let chu = data.toString();
-        str_out += chu;
+        strOut += chu;
         out.push(chu)
     })
 
@@ -114,19 +114,19 @@ export async function listBusyboxFiles(container: Container, folder: string): Pr
         });
     });
 
-    const raw_output = out.join("");
+    const rawOutput = out.join("");
     const output = "[" +
-        raw_output
+        rawOutput
             .replace(/(,?).+{/g, "$1 {") // remove weird characters inbetween objects
             .replace(/\s*[\n\r]/g, "") // remove all line breaks
             .slice(0, -1) // remove trailing comma
         + "]";
-    const output_json: FileStats[] = JSON.parse(output);
-    for (let file of output_json) {
-        file.file_name = file.file_name.slice(2)
+    const outputJson: FileStats[] = JSON.parse(output);
+    for (let file of outputJson) {
+        file.fileName = file.fileName.slice(2)
     }
     // TODO filtering
-    return output_json;
+    return outputJson;
 }
 
 export async function getBusyboxFileInfo(container: Container, path: string): Promise<FileStats> {
@@ -153,8 +153,8 @@ export async function sendBusyboxArchiveOrFile(container: Container, res: Respon
         path: "/tmp/volume" + path
     }
     const fileStats = await getBusyboxFileInfo(container, path);
-    fileStats.file_name = fileStats.file_name.split("/").reverse()[0];
-    const extractFile = fileStats.file_type.indexOf("directory") < 0;
+    fileStats.fileName = fileStats.fileName.split("/").reverse()[0];
+    const extractFile = fileStats.fileType.indexOf("directory") < 0;
 
     let archive = await container.getArchive(options);
     const writable = new streams.WritableStream();
@@ -163,12 +163,12 @@ export async function sendBusyboxArchiveOrFile(container: Container, res: Respon
 
     if (extractFile)
         res.writeHead(200, {
-            "Content-Disposition": "attachment;filename=" + fileStats.file_name,
-            "Content-Length": fileStats.total_size
+            "Content-Disposition": "attachment;filename=" + fileStats.fileName,
+            "Content-Length": fileStats.totalSize
         });
     else
         res.writeHead(200, {
-            "Content-Disposition": "attachment;filename=" + fileStats.file_name + ".tar",
+            "Content-Disposition": "attachment;filename=" + fileStats.fileName + ".tar",
         });
 
     writable._write = (chunk: Buffer, encoding, next) => {
@@ -177,12 +177,12 @@ export async function sendBusyboxArchiveOrFile(container: Container, res: Respon
                 chunk = chunk.slice(512); // remove first 512 bytes (tar header)
             }
 
-            if (processedFileLength + chunk.length < fileStats.total_size) {
+            if (processedFileLength + chunk.length < fileStats.totalSize) {
                 processedFileLength += chunk.length
                 res.write(chunk);
-            } else if (processedFileLength < fileStats.total_size) {
-                let slicedChunk = chunk.slice(0, fileStats.total_size - processedFileLength);
-                processedFileLength = fileStats.total_size
+            } else if (processedFileLength < fileStats.totalSize) {
+                let slicedChunk = chunk.slice(0, fileStats.totalSize - processedFileLength);
+                processedFileLength = fileStats.totalSize
                 res.write(slicedChunk)
             }
         } else
@@ -197,6 +197,14 @@ export async function sendBusyboxArchiveOrFile(container: Container, res: Respon
         resolve();
     }))
 }
+export async function putBusyboxArchiveOrFile(container: Container, req: Request, path: string): Promise<void> {
+    const options = {
+        path: "/tmp/volume" + path
+    }
+    const file = req.file!;
+    const stream = await container.putArchive(file.buffer, {});
+
+}
 
 export async function stopBusyboxContainer(container: Container): Promise<void> {
     await container.stop({ t: 0 });
@@ -204,4 +212,13 @@ export async function stopBusyboxContainer(container: Container): Promise<void> 
 
 export async function removeBusyboxContainer(container: Container): Promise<void> {
     await container.remove();
+}
+
+export async function volumeExists(docker: dockerode, volumeName: string): Promise<boolean> {
+    try {
+        await docker.getVolume(volumeName).inspect();
+    } catch (e) {
+        if (e.statusCode === 404) return false;
+    }
+    return true;
 }

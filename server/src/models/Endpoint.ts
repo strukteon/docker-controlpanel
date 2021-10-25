@@ -7,3 +7,9 @@ export default interface Endpoint {
     docker?: Dockerode,
     beforeDestroy?(): void
 }
+
+export type EndpointOptions = {
+    path: string,
+    routerConfig: (router: Router, docker: Dockerode) => void,
+    beforeDestroy?: (docker: Dockerode) => Promise<void>
+}
