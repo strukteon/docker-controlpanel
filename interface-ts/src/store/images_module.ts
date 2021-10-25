@@ -1,6 +1,7 @@
 import {getApiUrl} from "@/util/Tools";
+import {DockerDataModule} from "@/store/docker_data_module";
 
-export const imagesModule = {
+export const images_module: DockerDataModule<any> = {
     namespaced: true,
 
     state: () => ({
@@ -10,7 +11,7 @@ export const imagesModule = {
         images(state) {
             return state.images;
         },
-        imagesArray: (state) => (comparator) => {
+        imagesArray: (state) => (comparator: any) => {
             const images = Object.values(state.images);
             if (comparator) return images.sort(comparator);
             return images;
@@ -30,15 +31,10 @@ export const imagesModule = {
         async loadImages({ commit }, { axios }) {
             const res = await axios.get(`//${getApiUrl()}/images/all`);
             const images = res.data;
-            const imagesObj = {};
+            const imagesObj: any = {};
             for (let img of images)
                 imagesObj[img.Id] = img;
             commit('setImages', { images: imagesObj });
         },
     }
-}
-
-export function handleWebsocketMessage(msg) {
-    // console.log(msg)
-    msg.toString();
 }

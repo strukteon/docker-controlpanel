@@ -1,4 +1,4 @@
-export function readableSize(bytes) {
+export function readableSize(bytes: number): string {
     if (Math.floor(bytes / 1e12) > 0)
         return `${Math.floor(bytes / 1e10) / 1e2} TB`
     if (Math.floor(bytes / 1e9) > 0)
@@ -7,10 +7,10 @@ export function readableSize(bytes) {
         return `${Math.floor(bytes / 1e4) / 1e2} MB`
     if (Math.floor(bytes / 1e3) > 0)
         return `${Math.floor(bytes / 1e1) / 1e2} KB`
-    return `${bytes} B`
+    return `${Math.floor(bytes / 1e1) / 1e2} B`
 }
 
-export function readableDateDiff(date) {
+export function readableDateDiff(date: number | string): string {
     if (typeof date == "string") date = Date.parse(date);
     let diff = (Date.now() - date) / 1000;
     let years = Math.abs(Math.round(diff / (365 * 24 * 60 * 60))),
@@ -30,10 +30,9 @@ export function readableDateDiff(date) {
         return `${hours} hour${hours > 1 ? 's' : ''} ago`;
     if (minutes > 0)
         return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-    if (seconds > 0)
-        return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+    return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
 }
 
-export function getApiUrl() {
+export function getApiUrl(): string {
     return 'localhost:80';
 }

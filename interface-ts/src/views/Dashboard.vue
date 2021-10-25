@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "VueDropdownItem"
+  name: "Dashboard"
 }
 </script>
 

@@ -1,20 +1,20 @@
 <template>
-  <div class="fs-navbar">
-    <!--<div class="arrow" @click="goBackHistory();"><font-awesome-icon icon="arrow-left"/></div>
-    <div class="arrow" @click="goForwardHistory();"><font-awesome-icon icon="arrow-right"/></div>-->
-    <div :class="{'arrow': true, 'arrow-disabled': path.length === 1}" @click="pushParentFolder();"><font-awesome-icon icon="arrow-up"/></div>
-    <div class="path-list">
-      <div class="path-item" v-for="(folder, index) in path" :key="folder + index">
-        <span class="folder-text" @click="pushPathIndex(index)">{{ folder }}</span>
-        <font-awesome-icon class="chevron-right" icon="chevron-right"/>
-      </div>
+  <div>
+    <v-btn icon @click="pushParentFolder"><v-icon>mdi-arrow-up</v-icon></v-btn>
+    <v-btn icon disabled><v-icon>mdi-arrow-left</v-icon></v-btn>
+    <v-btn icon disabled><v-icon>mdi-arrow-right</v-icon></v-btn>
+    <div class="d-inline-flex ma-2">
+      <p v-for="(folder, i) in path" :key="folder + i">
+        <span class="folder-text px-1 blue--text text--darken-4" @click="pushPathIndex(i)">{{ folder }}</span>
+        <span>/</span>
+      </p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "FilesystemNavbar",
+  name: "FolderNavbar",
   props: {
     value: Array
   },
@@ -76,55 +76,11 @@ export default {
     },
     notifyChanges() {
       console.log("new path: ", this.path.join("/"))
-      this.$emit("locChange", this.path.join('/'))
+      this.$emit("change", this.path.join('/'))
+    },
+    getPath() {
+      return this.path.join('/');
     }
   }
 }
 </script>
-
-<style scoped>
-  .fs-navbar {
-    display: flex;
-    background-color: rgba(0, 0, 0, .05);
-    padding: .2rem;
-  }
-
-  .fs-navbar .arrow {
-    padding: .4rem;
-    width: 1rem;
-    height: 1rem;
-    line-height: 1rem;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    transition: all .2s ease;
-  }
-  .fs-navbar .arrow:hover {
-    background-color: rgba(0, 0, 0, .1);
-  }
-  .fs-navbar .arrow.arrow-disabled {
-    pointer-events: none;
-    color: rgba(0, 0, 0, .4);
-  }
-
-  .path-list {
-    display: flex;
-  }
-  .path-list .path-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .path-list .path-item .chevron-right {
-    font-size: .75rem;
-    padding: .3rem;
-    color: rgba(0, 0, 0, .5)
-  }
-  .path-list .path-item .folder-text {
-    color: #0db7ed;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-</style>

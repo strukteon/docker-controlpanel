@@ -1,6 +1,7 @@
 import {getApiUrl} from "@/util/Tools";
+import {DockerDataModule} from "@/store/docker_data_module";
 
-export const volumesModule = {
+export const volumes_module: DockerDataModule<any> = {
     namespaced: true,
 
     state: () => ({
@@ -10,13 +11,13 @@ export const volumesModule = {
     }),
     getters: {
         volumes: state => state.volumes,
-        volumesArray: (state) => (comparator) => {
+        volumesArray: (state) => (comparator: any) => {
             const volumes = Object.values(state.volumes);
             if (comparator) return volumes.sort(comparator);
             return volumes;
         },
         curFolder: state => state.curFolder,
-        curFolderArray: state => (comparator) => {
+        curFolderArray: state => (comparator: any) => {
             const files = Object.values(state.curFolder);
             if (comparator) return files.sort(comparator);
             return files;
@@ -32,21 +33,12 @@ export const volumesModule = {
         removeVolume(state, { volumeId }) {
             delete state.volumes[volumeId];
         },
-        setCurrentOpenFolder(state, { files }) {
-            state.curFolder = files;
-        },
-        clearCurrentOpenFolder(state) {
-            state.curFolder = [ ];
-        },
-        setFilesAreLoading(state, { filesAreLoading }) {
-            state.filesAreLoading = filesAreLoading;
-        }
     },
     actions: {
         async loadVolumes({ commit }, { axios }) {
             const res = await axios.get(`//${getApiUrl()}/volumes/all`);
-            const volumes = res.data.sort((o1, o2) => o1.Name.localeCompare(o2.Name));
-            const volumesObj = {};
+            const volumes = res.data.sort((o1: any, o2: any) => o1.Name.localeCompare(o2.Name));
+            const volumesObj: any = {};
             for (let vol of volumes)
                 volumesObj[vol.Name] = vol
             commit('setVolumes', { volumes: volumesObj });
@@ -65,9 +57,4 @@ export const volumesModule = {
             commit("setFilesAreLoading", { filesAreLoading: false });
         }
     }
-}
-
-export function handleWebsocketMessage(msg) {
-    // console.log(msg)
-    msg.toString();
 }

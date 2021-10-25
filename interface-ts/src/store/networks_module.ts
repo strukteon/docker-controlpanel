@@ -1,6 +1,7 @@
 import {getApiUrl} from "@/util/Tools";
+import {DockerDataModule} from "@/store/docker_data_module";
 
-export const networksModule = {
+export const networks_module: DockerDataModule<any> = {
     namespaced: true,
 
     state: () => ({
@@ -10,7 +11,7 @@ export const networksModule = {
         networks(state) {
             return state.networks;
         },
-        networksArray: (state) => (comparator) => {
+        networksArray: (state) => (comparator: any) => {
             const networks = Object.values(state.networks);
             if (comparator) return networks.sort(comparator);
             return networks;
@@ -30,15 +31,10 @@ export const networksModule = {
         async loadNetworks({ commit }, { axios }) {
             const res = await axios.get(`//${getApiUrl()}/networks/all`);
             const networks = res.data;
-            const networksObj = {};
+            const networksObj: any = {};
             for (let img of networks)
                 networksObj[img.Id] = img;
             commit('setNetworks', { networks: networksObj });
         },
     }
-}
-
-export function handleWebsocketMessage(msg) {
-    // console.log(msg)
-    msg.toString();
 }

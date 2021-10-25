@@ -1,4 +1,4 @@
-# gui
+# interface-ts
 
 ## Project setup
 ```
