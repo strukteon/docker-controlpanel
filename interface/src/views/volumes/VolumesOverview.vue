@@ -13,7 +13,7 @@
         </v-btn-toggle>
       </v-col>
 
-      <v-col md="3">
+      <v-col md="3" v-if="false">
         <v-toolbar
           dense
           class="ma-2"

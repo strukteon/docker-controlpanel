@@ -1,19 +1,13 @@
 import Vuex from "vuex";
-import { volumesModule } from "@/store/VolumesModule";
 import ServerStatusMonitorPlugin from "@/store/ServerStatusMonitorPlugin";
-import {imagesModule} from "@/store/ImagesModule";
-import {networksModule} from "@/store/NetworksModule";
-import {containersModule} from "@/store/ContainersModule";
 import Vue from "vue";
+import modules_list from "./modules_list";
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    volumes: volumesModule,
-    images: imagesModule,
-    networks: networksModule,
-    containers: containersModule,
+    ...modules_list
   },
   actions: {
     setup({ dispatch }, { axios }) {
@@ -23,5 +17,5 @@ export default new Vuex.Store({
       dispatch('containers/loadContainers', { axios });
     }
   },
-  plugins: [ServerStatusMonitorPlugin(new WebSocket('ws://localhost'))]
+  plugins: [ServerStatusMonitorPlugin()]
 })

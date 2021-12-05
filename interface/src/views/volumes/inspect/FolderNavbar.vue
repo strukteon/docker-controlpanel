@@ -77,6 +77,9 @@ export default {
     notifyChanges() {
       console.log("new path: ", this.path.join("/"))
       this.$emit("change", this.path.join('/'))
+    },
+    getPath() {
+      return this.path.join('/');
     }
   }
 }

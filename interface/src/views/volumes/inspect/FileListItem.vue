@@ -1,12 +1,12 @@
 <template>
   <v-list-item @click="emitClick(file)">
     <v-list-item-icon>
-      <v-icon v-if="file.file_type === 'directory'">mdi-folder</v-icon>
+      <v-icon v-if="file.fileType === 'directory'">mdi-folder</v-icon>
       <v-icon v-else>mdi-file</v-icon>
     </v-list-item-icon>
     <v-list-item-content>
-      <v-list-item-title>{{ file.file_name }}</v-list-item-title>
-      <v-list-item-subtitle v-if="file.file_type !== 'directory'">{{ readableSize(file.total_size) }}</v-list-item-subtitle>
+      <v-list-item-title>{{ file.fileName }}</v-list-item-title>
+      <v-list-item-subtitle v-if="file.fileType !== 'directory'">{{ readableSize(file.totalSize) }}</v-list-item-subtitle>
       <v-list-item-subtitle v-else>a few files</v-list-item-subtitle>
     </v-list-item-content>
 
@@ -75,9 +75,9 @@ export default {
       this.preventClick();
       console.log(this.file)
       let link = document.createElement("a");
-      link.setAttribute("href", `//${getApiUrl()}/volumes/${this.$route.params.volume}/download-file?path=${this.path}/${this.file.file_name}`);
+      link.setAttribute("href", `//${getApiUrl()}/volumes/${this.$route.params.volume}/download-file?path=${this.path}/${this.file.fileName}`);
       console.log(link.getAttribute("href"))
-      link.setAttribute("download", this.file.file_name);
+      link.setAttribute("download", this.file.fileName);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

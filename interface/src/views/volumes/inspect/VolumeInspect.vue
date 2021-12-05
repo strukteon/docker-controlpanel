@@ -25,28 +25,42 @@
     </v-tabs>
 
     <v-tabs-items v-model="openedTab">
+      <file-explorer :volume-name="volumeName"/>
+
       <v-tab-item>
-        <folder-navbar ref="fs_navbar" @change="loadCurFolder"/>
 
-        <div v-if="filesAreLoading">
-          <v-skeleton-loader
-              v-for="i in [0,1,2,3]"
-              :key="i"
-              type="list-item-avatar-two-line"
-          />
-        </div>
+        <v-simple-table class="pt-8">
+          <tbody>
+            <tr v-for="[title, value] in
+                    [['Created At', volume.CreatedAt],
+                    ['Driver', volume.Driver],
+                    ['Scope', volume.Scope],
+                    ['Mountpoint', volume.Mountpoint]]"
+                   :key="title" class="px-6">
+              <td>{{ title }}</td>
+              <td>{{ value }}</td>
+            </tr>
+          </tbody>
+        </v-simple-table>
 
-        <v-list v-else>
-          <file-list-item v-for="file in files"
-                          :key="file.inode_number"
-                          :path="$refs.fs_navbar.path.join('/')"
-                          :file="file"
-                          @click="handleFileClick"
-          />
-        </v-list>
+        <p class="px-2 pt-8 blue--text font-weight-bold text--lighten-1">Labels</p>
+        <v-simple-table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(value, key) in volume.Labels"
+                   :key="key">
+              <td>{{ key }}</td>
+              <td>{{ value }}</td>
+            </tr>
+          </tbody>
+        </v-simple-table>
 
       </v-tab-item>
-      <v-tab-item>Details</v-tab-item>
       <v-tab-item>
 
         <container-list-item
@@ -65,58 +79,32 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
-import FileListItem from "@/views/volumes/inspect/FileListItem";
-import FolderNavbar from "@/views/volumes/inspect/FolderNavbar";
 import ContainerListItem from "@/views/containers/ContainerListItem";
+import FileExplorer from "@/views/volumes/inspect/FileExplorer";
 
 export default {
   name: "VolumeInspect",
-  components: {ContainerListItem, FolderNavbar, FileListItem},
+  components: {FileExplorer, ContainerListItem},
   data: () => ({
     openedTab: 0,
     volumeName: null,
-    fileExplorerWebsocket: null
   }),
   mounted() {
     this.volumeName = this.$route.params.volume;
-    this.$store.dispatch("volumes/loadFolder", {axios: this.axios, volumeId: this.volumeName, path: ''});
-    this.fileExplorerWebsocket = new WebSocket("ws://localhost/volumes/");
   },
 
   computed: {
-    ...mapGetters({
-      curFolder: 'volumes/curFolder',
-      filesAreLoading: 'volumes/filesAreLoading'
-    }),
-    files() {
-      if (!this.curFolder) return []
-
-      const sortAlphabetically = (a, b) => a.file_name.localeCompare(b.file_name);
-      const folders = this.curFolder.filter(f => f.file_type === "directory").sort(sortAlphabetically);
-      const files = this.curFolder.filter(f => f.file_type !== "directory").sort(sortAlphabetically);
-      return [...folders, ...files];
-    },
     volume() {
-      return this.$store.getters["volumes/volumes"][this.volumeName]
+      return this.$store.getters["volumes/volumes"][this.volumeName] || {
+        UsageData: { },
+        Containers: [ ]
+      }
     }
   },
 
   methods: {
-    handleFileClick(file) {
-      if (file.file_type === "directory")
-        this.$refs.fs_navbar.pushFolder(file.file_name)
-    },
-    loadCurFolder(e) {
-      console.log('received', e)
-      this.$store.dispatch("volumes/loadFolder", {
-        axios: this.axios,
-        volumeId: this.volumeName,
-        path: e
-      })
-    },
-    x() {
-      console.log(this.volume)
+    log(e) {
+      console.log(e)
     }
   }
 }

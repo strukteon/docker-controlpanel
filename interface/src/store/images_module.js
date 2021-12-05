@@ -37,8 +37,3 @@ export const imagesModule = {
         },
     }
 }
-
-export function handleWebsocketMessage(msg) {
-    // console.log(msg)
-    msg.toString();
-}

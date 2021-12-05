@@ -17,6 +17,6 @@ export default {
   name: "ContainerListItem",
   props: {
     container: Object
-  }
+  },
 }
 </script>

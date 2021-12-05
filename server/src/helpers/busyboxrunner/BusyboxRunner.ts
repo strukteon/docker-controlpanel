@@ -108,7 +108,7 @@ export async function listBusyboxFiles(container: Container, folder: string): Pr
     })
 
     // wait for stream to end
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         stream.on("end", () => {
             resolve();
         });
@@ -192,7 +192,7 @@ export async function sendBusyboxArchiveOrFile(container: Container, res: Respon
 
     archive.pipe(writable)
 
-    await new Promise((resolve) => writable.on('finish', function() {
+    await new Promise<void>((resolve) => writable.on('finish', function() {
         console.log("Write is completed.");
         resolve();
     }))

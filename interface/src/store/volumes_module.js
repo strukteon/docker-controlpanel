@@ -1,7 +1,6 @@
 import {getApiUrl} from "@/util/Tools";
-import {DockerDataModule} from "@/store/docker_data_module";
 
-export const volumes_module: DockerDataModule<any> = {
+export const volumesModule = {
     namespaced: true,
 
     state: () => ({
@@ -11,13 +10,13 @@ export const volumes_module: DockerDataModule<any> = {
     }),
     getters: {
         volumes: state => state.volumes,
-        volumesArray: (state) => (comparator: any) => {
+        volumesArray: (state) => (comparator) => {
             const volumes = Object.values(state.volumes);
             if (comparator) return volumes.sort(comparator);
             return volumes;
         },
         curFolder: state => state.curFolder,
-        curFolderArray: state => (comparator: any) => {
+        curFolderArray: state => (comparator) => {
             const files = Object.values(state.curFolder);
             if (comparator) return files.sort(comparator);
             return files;
@@ -33,12 +32,21 @@ export const volumes_module: DockerDataModule<any> = {
         removeVolume(state, { volumeId }) {
             delete state.volumes[volumeId];
         },
+        setCurrentOpenFolder(state, { files }) {
+            state.curFolder = files;
+        },
+        clearCurrentOpenFolder(state) {
+            state.curFolder = [ ];
+        },
+        setFilesAreLoading(state, { filesAreLoading }) {
+            state.filesAreLoading = filesAreLoading;
+        }
     },
     actions: {
         async loadVolumes({ commit }, { axios }) {
             const res = await axios.get(`//${getApiUrl()}/volumes/all`);
-            const volumes = res.data.sort((o1: any, o2: any) => o1.Name.localeCompare(o2.Name));
-            const volumesObj: any = {};
+            const volumes = res.data.sort((o1, o2) => o1.Name.localeCompare(o2.Name));
+            const volumesObj = {};
             for (let vol of volumes)
                 volumesObj[vol.Name] = vol
             commit('setVolumes', { volumes: volumesObj });

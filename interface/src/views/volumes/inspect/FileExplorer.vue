@@ -32,7 +32,7 @@
 
     <v-list v-else>
       <file-list-item v-for="file in files"
-                      :key="file.inode_number"
+                      :key="file.inodeNumber"
                       :path="$refs.fs_navbar.path.join('/')"
                       :file="file"
                       @click="handleFileClick"
@@ -87,18 +87,18 @@ export default {
   },
   computed: {
     files() {
-      const sortAlphabetically = (a, b) => a.file_name.localeCompare(b.file_name);
-      const folders = this.curFolder.filter(f => f.file_type === "directory").sort(sortAlphabetically);
-      const files = this.curFolder.filter(f => f.file_type !== "directory").sort(sortAlphabetically);
+      const sortAlphabetically = (a, b) => a.fileName.localeCompare(b.fileName);
+      const folders = this.curFolder.filter(f => f.fileType === "directory").sort(sortAlphabetically);
+      const files = this.curFolder.filter(f => f.fileType !== "directory").sort(sortAlphabetically);
       return [...folders, ...files];
     },
   },
   methods: {
     handleFileClick(file) {
-      if (file.file_type === "directory")
-        this.$refs.fs_navbar.pushFolder(file.file_name)
+      if (file.fileType === "directory")
+        this.$refs.fs_navbar.pushFolder(file.fileName)
       else {
-        axios.get(`//${getApiUrl()}/volumes/${this.volumeName}/download-file?path=${this.$refs.fs_navbar.getPath()}/${file.file_name}`)
+        axios.get(`//${getApiUrl()}/volumes/${this.volumeName}/download-file?path=${this.$refs.fs_navbar.getPath()}/${file.fileName}`)
         .then(res => {
           console.log("---------------------------", res.data, this.editorValue)
           this.editorValue = res.data
