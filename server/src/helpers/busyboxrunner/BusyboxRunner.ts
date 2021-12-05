@@ -32,7 +32,7 @@ export function setupExitHook(docker: dockerode): void {
 export async function busyboxIsInstalled(docker: dockerode): Promise<boolean> {
     try {
         await docker.getImage("busybox").inspect();
-    } catch (e) {
+    } catch (e: any) {
         if (e.statusCode === 404)
             return false;
     }
@@ -217,7 +217,7 @@ export async function removeBusyboxContainer(container: Container): Promise<void
 export async function volumeExists(docker: dockerode, volumeName: string): Promise<boolean> {
     try {
         await docker.getVolume(volumeName).inspect();
-    } catch (e) {
+    } catch (e: any) {
         if (e.statusCode === 404) return false;
     }
     return true;

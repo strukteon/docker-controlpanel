@@ -4,14 +4,21 @@
     <v-dialog
         v-model="dialog"
         width="600px"
+        fullscreen
     >
       <v-card>
         <v-card-title>
-          <span class="text-h5">Use Google's location service?</span>
+          <span class="text-h5">{{ openFile.name }}</span>
         </v-card-title>
         <v-card-text>
-          <v-textarea :value="editorValue"/>
+          <v-textarea auto-grow :value="openFile.content"/>
         </v-card-text>
+        <v-divider/>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="secondary" text @click="dialog = false">Close</v-btn>
+          <v-btn color="primary" text @click="dialog = false">Save</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
 
@@ -60,7 +67,7 @@ export default {
     feWebsocket: null,
     filesAreLoading: true,
     curFolder: [],
-    editorValue: "test",
+    openFile: {},
     fileOpen: false,
     dialog: false
   }),
@@ -100,8 +107,11 @@ export default {
       else {
         axios.get(`//${getApiUrl()}/volumes/${this.volumeName}/download-file?path=${this.$refs.fs_navbar.getPath()}/${file.fileName}`)
         .then(res => {
-          console.log("---------------------------", res.data, this.editorValue)
-          this.editorValue = res.data
+          console.log("---------------------------", res.data)
+          this.openFile = {
+            name: file.fileName,
+            content: res.data
+          }
           this.fileOpen = true;
           this.dialog = true;
           console.log(this, this.editorValue);
